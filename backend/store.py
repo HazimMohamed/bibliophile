@@ -73,6 +73,7 @@ def _chapter_to_response(ch) -> ChapterFullResponse:
         paragraphs=ch.paragraphs,
         paragraph_count=len(ch.paragraphs),
         is_summarized=ch.summary is not None,
+        summary=ch.summary,
     )
 
 

@@ -10,6 +10,7 @@ class Chapter(BaseModel):
     paragraphs: list[str]
     summary: str | None = None
     summarized_at: str | None = None
+    summarized_to_paragraph: int | None = None  # last paragraph included in the current summary
 
 
 class Message(BaseModel):

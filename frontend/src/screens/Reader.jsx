@@ -7,6 +7,7 @@ import NoteModal from '../components/NoteModal.jsx';
 
 const SAMPLE_INTERVAL_MS = 500;
 const SAVE_DEBOUNCE_MS = 2000;
+const SUMMARY_POLL_MS = 5_000;
 
 function renderWithHighlights(text, highlights) {
   // Resolve offsets: use stored offsets or fall back to indexOf
@@ -116,6 +117,54 @@ export default function Reader({ bookId }) {
     setSelectionInfo(null);
   }, [allAnnotations, chapterIndex]);
 
+  // ── Poll for summary updates ──────────────────────────────
+  // bookRef lets the interval always read current book state without
+  // needing book in the dep array (which would reset the timer on every setBook).
+  const bookRef = useRef(book);
+  bookRef.current = book;
+
+  const pollInFlight = useRef(false);
+  useEffect(() => {
+    const id = setInterval(async () => {
+      if (!bookRef.current) return;
+      if (pollInFlight.current) return;
+      pollInFlight.current = true;
+      try {
+        const fresh = await api.getBook(bookId);
+        const currentChapters = bookRef.current?.chapters ?? [];
+        const updates = currentChapters
+          .map((ch, i) => ({ i, ch, fch: fresh.chapters?.[i] }))
+          .filter(({ ch, fch }) => fch && fch.summary !== ch.summary);
+
+        if (updates.length === 0) {
+          console.debug('[summarize] poll: no changes');
+        } else {
+          for (const { i, ch, fch } of updates) {
+            const words = fch.summary?.split(/\s+/).length ?? 0;
+            console.log(
+              `[summarize] chapter ${i} "${ch.title}" summary updated` +
+              (fch.summary ? ` (${words} words, at ${fch.summarized_at})` : ' (cleared)')
+            );
+          }
+          setBook((prev) => {
+            if (!prev) return prev;
+            const chapters = prev.chapters.map((ch, i) => {
+              const fch = fresh.chapters?.[i];
+              if (!fch || fch.summary === ch.summary) return ch;
+              return { ...ch, summary: fch.summary, summarized_at: fch.summarized_at };
+            });
+            return { ...prev, chapters };
+          });
+        }
+      } catch (err) {
+        console.warn('[summarize] poll failed:', err);
+      } finally {
+        pollInFlight.current = false;
+      }
+    }, SUMMARY_POLL_MS);
+    return () => clearInterval(id);
+  }, [bookId]);
+
   // ── Scroll to saved position ─────────────────────────────
 
   useEffect(() => {
@@ -183,27 +232,39 @@ export default function Reader({ bookId }) {
           setSelectionInfo(null);
           return;
         }
-        // Walk up from anchor node to find the <p data-paragraph="N">
-        let node = sel.anchorNode;
-        while (node && !(node.nodeName === 'P' && node.dataset?.paragraph !== undefined)) {
-          node = node.parentNode;
-        }
-        if (!node) { setSelectionInfo(null); return; }
+        // Walk up from anchor/focus nodes to find their <p data-paragraph="N">
+        const findPara = (n) => {
+          while (n && !(n.nodeName === 'P' && n.dataset?.paragraph !== undefined)) n = n.parentNode;
+          return n;
+        };
+        const anchorPara = findPara(sel.anchorNode);
+        if (!anchorPara) { setSelectionInfo(null); return; }
 
         const range = sel.getRangeAt(0);
         const rect = range.getBoundingClientRect();
 
-        // Character offsets within the paragraph text node
+        // Character offsets within the anchor paragraph
         const nodeRange = document.createRange();
-        nodeRange.selectNodeContents(node);
+        nodeRange.selectNodeContents(anchorPara);
         nodeRange.setEnd(range.startContainer, range.startOffset);
         const startOffset = nodeRange.toString().length;
-        const endOffset = startOffset + range.toString().length;
+
+        // If the selection crosses a paragraph boundary, clamp to this paragraph's end
+        // so the stored offsets and selected_text stay valid within a single paragraph.
+        const focusPara = findPara(sel.focusNode);
+        const paraText = anchorPara.textContent;
+        const isCross = focusPara && focusPara !== anchorPara;
+        const endOffset = isCross ? paraText.length : startOffset + range.toString().length;
+        const text = isCross
+          ? paraText.slice(startOffset).trim()
+          : sel.toString().trim();
+
+        if (!text) { setSelectionInfo(null); return; }
 
         setSelectionInfo({
           rect,
-          text: sel.toString().trim(),
-          paragraphIndex: parseInt(node.dataset.paragraph, 10),
+          text,
+          paragraphIndex: parseInt(anchorPara.dataset.paragraph, 10),
           startOffset,
           endOffset,
         });

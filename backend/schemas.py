@@ -22,6 +22,7 @@ class ChapterFullResponse(BaseModel):
     paragraphs: list[str]
     paragraph_count: int
     is_summarized: bool
+    summary: str | None = None
 
 
 class BookDetailResponse(BookSummaryResponse):

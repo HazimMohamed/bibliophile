@@ -61,6 +61,16 @@ from pydantic import BaseModel
 from typing import Annotated, Literal
 from pydantic import Field
 
+# ── Position ─────────────────────────────────────────────────────────────────
+
+class TextIndex(BaseModel):
+    """A content-anchored position within a book.
+    Survives layout changes, font resizes, and viewport differences.
+    Supports natural ordering: (chapter_index, paragraph_index, offset)."""
+    chapter_index: int
+    paragraph_index: int
+    offset: int                           # character offset within the paragraph text
+
 # ── Chapters ────────────────────────────────────────────────────────────────
 
 class Chapter(BaseModel):
@@ -69,9 +79,9 @@ class Chapter(BaseModel):
     index: int                            # display order; set at ingest, stored explicitly
     title: str
     paragraphs: list[str]                 # plain text paragraphs, HTML stripped, whitespace normalized
-                                          # the paragraph list is the canonical position contract
-                                          # index into this list = paragraph_index throughout the app
-    summary: str | None = None            # updated in place; partial until chapter complete
+                                          # paragraphs are structural units for context assembly,
+                                          # not a position primitive — position uses TextIndex
+    summary: str | None = None            # written on chapter advance or lazily at conversation open
     summarized_at: str | None = None
 
 # ── Messages ─────────────────────────────────────────────────────────────────
@@ -89,13 +99,14 @@ class AnnotationBase(BaseModel):
     id: str                               # format: "{type}/{uuid4}" e.g. "conversation/550e8400..."
     book_id: str
     chapter_id: str                       # stable ref — survives chapter reprocessing
-    chapter_index: int                    # denormalized for sorting/display; derived from chapter_id at write time
-    paragraph_index: int                  # semantic paragraph index at time of creation
+    position: TextIndex                   # anchor point at time of creation
     created_at: str
 
 class HighlightAnnotation(AnnotationBase):
     type: Literal["highlight"]
-    selected_text: str                    # the passage
+    start: TextIndex                      # inclusive start of highlighted span
+    end: TextIndex                        # exclusive end — may be in a different paragraph
+    selected_text: str                    # verbatim text of the span (for display and fallback rendering)
     content: str | None = None            # optional user note on the highlight
 
 class NoteAnnotation(AnnotationBase):
@@ -123,8 +134,7 @@ class Book(BaseModel):
     author: str
     epub_path: str                        # relative to BOOKS_DIR — keeps the app portable
     cover_base64: str | None = None       # extracted once at ingest, stored inline
-    current_chapter_index: int = 0
-    semantic_paragraph_index: int = 0     # processed reading position — see Reading Position Tracker
+    reading_position: TextIndex = TextIndex(chapter_index=0, paragraph_index=0, offset=0)
     chapters: list[Chapter] = []
 ```
 
@@ -143,8 +153,7 @@ class BookSummaryResponse(BaseModel):
     title: str
     author: str
     cover_base64: str | None
-    current_chapter_index: int
-    semantic_paragraph_index: int
+    reading_position: TextIndex
     chapter_count: int
     annotation_count: int                 # derived from annotation directory scan
 
@@ -155,8 +164,7 @@ class BookDetailResponse(BookSummaryResponse):
     chapters: list[ChapterFullResponse]
 
 class StateUpdateRequest(BaseModel):
-    current_chapter_index: int
-    semantic_paragraph_index: int
+    reading_position: TextIndex
 
 # ── Chapter schemas ───────────────────────────────────────────────────────────
 
@@ -168,28 +176,27 @@ class ChapterFullResponse(BaseModel):
     paragraphs: list[str]
     paragraph_count: int
     is_summarized: bool
+    summary: str | None = None
 
 # ── Annotation schemas ────────────────────────────────────────────────────────
 
 class HighlightCreateRequest(BaseModel):
     chapter_id: str
-    chapter_index: int
-    paragraph_index: int
+    start: TextIndex
+    end: TextIndex
     selected_text: str
     content: str | None = None
 
 class NoteCreateRequest(BaseModel):
     chapter_id: str
-    chapter_index: int
-    paragraph_index: int
+    position: TextIndex
     content: str
 
 # ── Conversation schemas ──────────────────────────────────────────────────────
 
 class ConversationCreateRequest(BaseModel):
     chapter_id: str
-    chapter_index: int
-    paragraph_index: int
+    position: TextIndex
     title: str | None = None
 
 class ConversationResponse(BaseModel):
@@ -197,8 +204,7 @@ class ConversationResponse(BaseModel):
     id: str
     book_id: str
     chapter_id: str
-    chapter_index: int
-    paragraph_index: int
+    position: TextIndex
     title: str | None
     created_at: str
     messages: list[Message]
@@ -295,47 +301,52 @@ The contract above is what matters. How `epub.py` produces it:
 
 ## Reading Position Tracker
 
-Position is the ground truth of the entire app. But scroll position is not reading position — a user can scroll instantly through 200 paragraphs they haven't read. The reading position tracker is the module responsible for converting a raw stream of scroll samples into a clean `semantic_paragraph_index` that represents where the AI considers the user to actually be in the story.
+Position is the ground truth of the entire app. But scroll position is not reading position — a user can scroll instantly through 200 paragraphs they haven't read. The reading position tracker is the module responsible for converting a raw stream of scroll samples into a clean `TextIndex` that represents where the AI considers the user to actually be in the story.
 
 ### The contract
 
 ```
 Input:  stream of (timestamp, raw_paragraph_index) samples
-Output: semantic_paragraph_index (monotonic, smoothed, persisted)
+Output: reading_position: TextIndex (monotonic, smoothed, persisted)
 ```
 
-Any algorithm that satisfies this contract can be swapped in without touching anything else in the app. The rest of the system only ever sees `semantic_paragraph_index`.
+Any algorithm that satisfies this contract can be swapped in without touching anything else in the app. The rest of the system only ever sees `Book.reading_position`.
 
 ### Output constraints (enforced by all algorithms)
 
-- **Monotonic** — semantic position never moves backward except on explicit chapter navigation
-- **Never exceeds raw** — semantic position cannot be ahead of where the user has scrolled
-- **Persisted** — written to `Book.semantic_paragraph_index` on a debounced interval
+- **Monotonic** — reading position never moves backward except on explicit chapter navigation
+- **Never exceeds raw** — reading position cannot be ahead of where the user has scrolled
+- **Persisted** — written to `Book.reading_position` on a debounced interval via `PUT /books/{id}/state`
+- **Layout-independent** — stored as `TextIndex`, not scroll pixels; restores correctly across devices and font sizes
 
-### v0.1 algorithm — raw position
+### v0.1 algorithm — raw midpoint paragraph
 
-The simplest possible implementation. Semantic position = raw midpoint paragraph. No smoothing, no velocity gating. Good enough to validate the rest of the system.
+The simplest possible implementation. Semantic position = the paragraph straddling the viewport midpoint. The `offset` field of `TextIndex` is set to 0 (paragraph-level granularity). No smoothing, no velocity gating. Good enough to validate the rest of the system.
 
 ```javascript
 const sample = () => {
     const midY = window.innerHeight / 2;
-    for (const p of document.querySelectorAll('p[data-index]')) {
+    for (const p of document.querySelectorAll('p[data-paragraph]')) {
         const rect = p.getBoundingClientRect();
         if (rect.top <= midY && rect.bottom >= midY)
-            return parseInt(p.dataset.index);
+            return { paragraph_index: parseInt(p.dataset.paragraph), offset: 0 };
     }
 };
 
 // debounced — fires every 500ms
 setInterval(() => {
     const raw = sample();
-    if (raw !== null) updateSemanticPosition(raw);
+    if (raw !== null) updateReadingPosition(raw);
 }, 500);
 ```
 
+### Restoration
+
+On book open, scroll to the saved paragraph via `element.scrollIntoView()`. This is layout-independent — the correct paragraph is always found regardless of font size or viewport.
+
 ### Future algorithms (NTH)
 
-- **EMA with velocity gating** — exponential moving average, fast scroll treated as skimming and not advancing semantic position
+- **EMA with velocity gating** — exponential moving average, fast scroll treated as skimming and not advancing reading position
 - **Dwell time weighted** — time spent in viewport weighted by paragraph length
 - **Reading speed prior** — gate advancement against average reading speed (~2-3 paragraphs/minute), reject implausibly fast advances
 
@@ -347,17 +358,17 @@ The module is designed to be replaced. Start simple, instrument, improve.
 
 ### The three-zone window
 
-Position is tracked as `semantic_paragraph_index` — the output of the Reading Position Tracker module. See that section for how raw scroll samples are converted into this value.
+Position is tracked as `Book.reading_position: TextIndex` — the output of the Reading Position Tracker module. See that section for how raw scroll samples are converted into this value.
 
 ```
 [Previous chapters]
-  → final summaries (or in-place partial if chapter was abandoned mid-read)
+  → complete summaries (written on chapter advance)
 
-[Current chapter: start → current paragraph - N]
-  → in-place summary (partial if mid-chapter, finalized on chapter advance)
-  → omitted entirely if reader is within N paragraphs of chapter start
+[Current chapter: start → position.paragraph_index - N]
+  → summary written lazily at conversation open, up to conversation's TextIndex
+  → omitted entirely if conversation is within N paragraphs of chapter start
 
-[Current chapter: current paragraph - N → end of visible page]
+[Current chapter: position.paragraph_index - N → end of visible page]
   → verbatim text
 ```
 
@@ -374,16 +385,17 @@ Empty summary blocks are omitted from context entirely — never injected as bla
   Chapters 0 → current-1, concatenated
   Omitted if on chapter 0
 
-[AI's memory: current chapter partial summary]
-  Chapter start → N-back boundary
-  Omitted if within N paragraphs of chapter start
+[AI's memory: current chapter summary]
+  Chapter start → conversation's TextIndex
+  Written lazily before opening message if not already present
+  Omitted if conversation is within N paragraphs of chapter start
 
 [Verbatim window]
   N paragraphs back → current paragraph + page end
 
 [Selected passage — if conversation was started from a highlight]
   "{selected_text}"
-  This passage was highlighted by the reader at chapter {N}, paragraph {P}.
+  This passage was highlighted by the reader at {TextIndex}.
   Omitted if conversation has no selected text
 
 [Conversation history]
@@ -444,7 +456,7 @@ This chapter is not yet complete — do not write as though it has ended."
 
 **Trigger:**
 - **Chapter complete** — fires when reader advances to next chapter. Full chapter text in, final summary out.
-- **Mid-chapter** — fires every 20 paragraphs advanced, only when reader is past N paragraphs in. Updates summary in place.
+- **Conversation open** — fires lazily when a conversation is created, summarizing the current chapter up to the conversation's `paragraph_index`. Completes before the Sonnet opening message call; the latency blends into the opening message load time.
 
 **Target length:** 150–300 words. Err toward completeness.
 
@@ -852,11 +864,11 @@ Typography follows the reading context — a serif for chapter text (Georgia or 
 **Exit condition:** Can highlight text, leave notes, see all annotations as margin indicators anchored to their paragraphs.
 
 ### Phase 3 — Summarization Pipeline
-1. `summarize.py` — Haiku call with partial/complete flag, previous summaries as context, write into `Chapter.summary`
-2. Hook into chapter advance — final summary fires on navigation
-3. Hook into paragraph advance — partial summary every 20 paragraphs past N threshold
+1. `summarize.py` — Haiku call with complete/partial flag, previous summaries as context, write into `Chapter.summary`
+2. Hook into chapter advance — complete summary fires on navigation
+3. Hook into conversation open — lazy summary of current chapter up to `paragraph_index`, runs before opening message
 
-**Exit condition:** Advancing through chapters generates and stores summaries silently. Mid-chapter summaries update in place.
+**Exit condition:** Advancing through chapters generates and stores summaries silently. Opening a conversation in a mid-chapter position summarizes up to that point before the AI responds.
 
 ### Phase 4 — AI Chat
 1. `context.py` — three-zone window assembly, selected text seed injection, conversation history
@@ -891,7 +903,7 @@ These are acknowledged bugs and architectural gaps deferred to future versions. 
 
 **Context window creep** — for very long books (War and Peace, ~360 chapters), concatenated chapter summaries will eventually exceed the model's context window. Fix: rolling window with meta-summary compression — groups of early chapters get recursively re-summarized into a single block. Not needed until the app is actually used on long books.
 
-**Summarization burst** — if the user scrolls rapidly past the 20-paragraph trigger multiple times, multiple summarization calls fire simultaneously. Fix: track `last_summarized_paragraph` and gate on `current - last >= 20`. Deferring because v0.1 uses raw position anyway, and rapid scroll means the semantic position won't advance.
+**Next-chapter spam** — if the user navigates forward through several chapters rapidly, a complete summarization task fires for each departed chapter. The in-flight guard prevents duplicate tasks for the same chapter, but N rapid advances still launch N concurrent Haiku calls. Fix: a global summarization queue with a single worker. Deferred — unlikely in normal reading, and each task is independently correct.
 
 **EPUB normalization edge cases** — the paragraph extraction pipeline assumes relatively well-behaved EPUBs (Gutenberg-quality). Malformed EPUBs with inline `<br>`, poetry blocks, footnotes, and Gutenberg artifacts may produce inconsistent paragraph lists. Fix: more aggressive normalization and a test suite across a large EPUB sample. Deferred pending real-world testing.
 

@@ -1,3 +1,4 @@
+import asyncio
 import os
 import tempfile
 import uuid
@@ -18,8 +19,16 @@ from .schemas import (
 )
 from .store import store, BOOKS_DIR, ANNOTATIONS_DIR
 from .epub import ingest_epub
+from .summarize import run_summarize, task_error_handler, N_THRESHOLD, PARTIAL_INTERVAL
 
 load_dotenv()
+
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)-8s %(name)s — %(message)s",
+    datefmt="%H:%M:%S",
+)
 
 app = FastAPI(title="Bibliophile", version="0.1.0")
 
@@ -90,18 +99,46 @@ async def delete_book(book_id: str):
 @app.put("/books/{book_id}/state", status_code=204)
 async def update_state(book_id: str, req: StateUpdateRequest):
     book = await store.get_book(book_id)
-    book.current_chapter_index = req.current_chapter_index
-    book.semantic_paragraph_index = req.semantic_paragraph_index
+    old_chapter = book.current_chapter_index
+    new_chapter = req.current_chapter_index
+    new_para = req.semantic_paragraph_index
+
+    book.current_chapter_index = new_chapter
+    book.semantic_paragraph_index = new_para
     await store.save_book(book)
+
+    if new_chapter > old_chapter:
+        # Reader advanced to a new chapter — finalize summary of departed chapter
+        t = asyncio.create_task(
+            run_summarize(book_id, old_chapter, is_complete=True),
+            name=f"summarize/{book_id}/ch{old_chapter}/complete",
+        )
+        t.add_done_callback(task_error_handler)
+    elif new_chapter == old_chapter and book.chapters:
+        ch = book.chapters[new_chapter]
+        if new_para >= N_THRESHOLD:
+            last = ch.summarized_to_paragraph or 0
+            if new_para - last >= PARTIAL_INTERVAL:
+                t = asyncio.create_task(
+                    run_summarize(
+                        book_id, new_chapter, is_complete=False, up_to_paragraph=new_para
+                    ),
+                    name=f"summarize/{book_id}/ch{new_chapter}/partial@{new_para}",
+                )
+                t.add_done_callback(task_error_handler)
 
 
 @app.post("/books/{book_id}/chapters/{chapter_index}/summarize", status_code=202)
 async def summarize_chapter(book_id: str, chapter_index: int):
-    # Stub for Phase 1
-    return JSONResponse(
-        status_code=202,
-        content={"status": "accepted", "message": "Summarization not yet implemented"},
+    book = await store.get_book(book_id)
+    if chapter_index < 0 or chapter_index >= len(book.chapters):
+        return JSONResponse(status_code=404, content={"detail": "Chapter not found"})
+    t = asyncio.create_task(
+        run_summarize(book_id, chapter_index, is_complete=True),
+        name=f"summarize/{book_id}/ch{chapter_index}/manual",
     )
+    t.add_done_callback(task_error_handler)
+    return JSONResponse(status_code=202, content={"status": "accepted"})
 
 
 # --- Annotation routes ---
