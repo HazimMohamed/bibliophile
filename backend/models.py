@@ -80,6 +80,7 @@ class Book(BaseModel):
     author: str
     epub_path: str
     cover_base64: str | None = None
+    cover_source: str | None = None   # "epub" | "svg" | "ai" | None
     reading_position: TextIndex = Field(
         default_factory=lambda: TextIndex(chapter_index=0, paragraph_index=0, offset=0)
     )

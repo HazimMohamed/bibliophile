@@ -18,6 +18,7 @@ from .schemas import (
     NoteCreateRequest,
 )
 from .store import store, BOOKS_DIR, ANNOTATIONS_DIR
+from .covers import default_cover_service
 from .epub import ingest_epub
 from .summarize import run_summarize, task_error_handler
 from .chat import router as chat_router
@@ -84,6 +85,16 @@ async def list_books():
 @app.get("/books/{book_id}", response_model=BookDetailResponse)
 async def get_book(book_id: str):
     return await store.get_book_detail(book_id)
+
+
+@app.post("/api/books/{book_id}/cover/regenerate")
+async def regenerate_cover(book_id: str, generator: str = "svg"):
+    book = await store.get_book(book_id)
+    cover = await default_cover_service.generate(book.title, book.author)
+    book.cover_base64 = cover
+    book.cover_source = generator
+    await store.save_book(book)
+    return {"cover_base64": cover, "cover_source": generator}
 
 
 @app.delete("/books/{book_id}", status_code=204)
