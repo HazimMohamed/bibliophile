@@ -4,50 +4,92 @@ import Outline from '../components/Outline.jsx';
 import AnnotationToolbar from '../components/AnnotationToolbar.jsx';
 import AnnotationPanel from '../components/AnnotationPanel.jsx';
 import NoteModal from '../components/NoteModal.jsx';
+import ContextMenu from '../components/ContextMenu.jsx';
+import ChatPanel from '../components/ChatPanel.jsx';
 
 const SAMPLE_INTERVAL_MS = 500;
 const SAVE_DEBOUNCE_MS = 2000;
-const SUMMARY_POLL_MS = 5_000;
 
-function renderWithHighlights(text, highlights) {
-  // Resolve offsets: use stored offsets or fall back to indexOf
+function renderWithHighlights(text, highlights, paragraphIndex) {
   const resolved = highlights
+    .filter(h => h.type === 'highlight')
     .map((h) => {
-      let start = h.start_offset;
-      let end = h.end_offset;
-      if (start == null && h.selected_text) {
-        start = text.indexOf(h.selected_text);
-        end = start === -1 ? null : start + h.selected_text.length;
-      }
-      return start != null && end != null && start < end ? { ...h, start_offset: start, end_offset: end } : null;
+      const sp = h.start.paragraph_index, ep = h.end.paragraph_index;
+      let s, e;
+      if (paragraphIndex === sp && paragraphIndex === ep) { s = h.start.offset; e = h.end.offset; }
+      else if (paragraphIndex === sp)                     { s = h.start.offset; e = text.length;  }
+      else if (paragraphIndex === ep)                     { s = 0;              e = h.end.offset; }
+      else                                               { s = 0;              e = text.length;  }
+      return s < e ? { ...h, _s: s, _e: e } : null;
     })
     .filter(Boolean)
-    .sort((a, b) => a.start_offset - b.start_offset);
+    .sort((a, b) => a._s - b._s);
 
   if (resolved.length === 0) return text;
 
   const parts = [];
   let pos = 0;
   for (const h of resolved) {
-    const start = Math.max(h.start_offset, pos);
-    const end = Math.min(h.end_offset, text.length);
+    const start = Math.max(h._s, pos);
+    const end = Math.min(h._e, text.length);
     if (start >= end) continue;
     if (start > pos) parts.push(text.slice(pos, start));
-    parts.push(<mark key={h.id} className="inline-highlight">{text.slice(start, end)}</mark>);
+    parts.push(<mark key={h.id} data-ann-id={h.id} className="inline-highlight">{text.slice(start, end)}</mark>);
     pos = end;
   }
   if (pos < text.length) parts.push(text.slice(pos));
   return parts;
 }
 
+function computeSelectionInfo() {
+  const sel = window.getSelection();
+  if (!sel || sel.isCollapsed || !sel.toString().trim()) return null;
+  const range = sel.getRangeAt(0);
+  const rect = range.getBoundingClientRect();
+  const findPara = (n) => {
+    while (n && !(n.nodeName === 'P' && n.dataset?.paragraph !== undefined)) n = n.parentNode;
+    return n;
+  };
+  const startPara = findPara(range.startContainer);
+  const endPara   = findPara(range.endContainer);
+  if (!startPara) return null;
+  const measureOffset = (para, container, containerOffset) => {
+    const r = document.createRange();
+    r.selectNodeContents(para);
+    r.setEnd(container, containerOffset);
+    return r.toString().length;
+  };
+  const startOffset = measureOffset(startPara, range.startContainer, range.startOffset);
+  const endOffset   = endPara
+    ? measureOffset(endPara, range.endContainer, range.endOffset)
+    : startOffset + range.toString().length;
+  const text = sel.toString().trim();
+  if (!text) return null;
+  return {
+    rect,
+    text,
+    startParaIndex: parseInt(startPara.dataset.paragraph, 10),
+    endParaIndex:   parseInt((endPara ?? startPara).dataset.paragraph, 10),
+    startOffset,
+    endOffset,
+  };
+}
+
 function buildAnnotationMap(annotations, forChapter) {
   const map = new Map();
   if (!Array.isArray(annotations)) return map;
   for (const ann of annotations) {
-    if (ann.chapter_index === forChapter) {
-      const idx = ann.paragraph_index;
-      if (!map.has(idx)) map.set(idx, []);
-      map.get(idx).push(ann);
+    if (ann.type === 'highlight') {
+      if (ann.start?.chapter_index !== forChapter) continue;
+      for (let i = ann.start.paragraph_index; i <= ann.end.paragraph_index; i++) {
+        if (!map.has(i)) map.set(i, []);
+        map.get(i).push(ann);
+      }
+    } else {
+      const pos = ann.position;
+      if (pos?.chapter_index !== forChapter) continue;
+      if (!map.has(pos.paragraph_index)) map.set(pos.paragraph_index, []);
+      map.get(pos.paragraph_index).push(ann);
     }
   }
   return map;
@@ -74,6 +116,10 @@ export default function Reader({ bookId }) {
   const [noteModalInfo, setNoteModalInfo] = useState(null);
   // Annotation detail panel
   const [activePanel, setActivePanel] = useState(null); // { annotations, rect }
+  // Right-click context menu
+  const [contextMenuInfo, setContextMenuInfo] = useState(null); // { point: {x,y}, items: [] }
+  // Active conversation for chat panel
+  const [activeConversation, setActiveConversation] = useState(null);
 
   const lastSavedChapter = useRef(0);
   const lastSavedParagraph = useRef(0);
@@ -94,10 +140,11 @@ export default function Reader({ bookId }) {
         ]);
         if (cancelled) return;
         setBook(bookData);
-        const startChapter = bookData.current_chapter_index ?? 0;
+        const pos = bookData.reading_position ?? { chapter_index: 0, paragraph_index: 0, offset: 0 };
+        const startChapter = pos.chapter_index;
         setChapterIndex(startChapter);
         lastSavedChapter.current = startChapter;
-        lastSavedParagraph.current = bookData.semantic_paragraph_index ?? 0;
+        lastSavedParagraph.current = pos.paragraph_index;
         setAllAnnotations(annotations);
         setAnnotationMap(buildAnnotationMap(annotations, startChapter));
       } catch (err) {
@@ -116,54 +163,6 @@ export default function Reader({ bookId }) {
     setActivePanel(null);
     setSelectionInfo(null);
   }, [allAnnotations, chapterIndex]);
-
-  // ── Poll for summary updates ──────────────────────────────
-  // bookRef lets the interval always read current book state without
-  // needing book in the dep array (which would reset the timer on every setBook).
-  const bookRef = useRef(book);
-  bookRef.current = book;
-
-  const pollInFlight = useRef(false);
-  useEffect(() => {
-    const id = setInterval(async () => {
-      if (!bookRef.current) return;
-      if (pollInFlight.current) return;
-      pollInFlight.current = true;
-      try {
-        const fresh = await api.getBook(bookId);
-        const currentChapters = bookRef.current?.chapters ?? [];
-        const updates = currentChapters
-          .map((ch, i) => ({ i, ch, fch: fresh.chapters?.[i] }))
-          .filter(({ ch, fch }) => fch && fch.summary !== ch.summary);
-
-        if (updates.length === 0) {
-          console.debug('[summarize] poll: no changes');
-        } else {
-          for (const { i, ch, fch } of updates) {
-            const words = fch.summary?.split(/\s+/).length ?? 0;
-            console.log(
-              `[summarize] chapter ${i} "${ch.title}" summary updated` +
-              (fch.summary ? ` (${words} words, at ${fch.summarized_at})` : ' (cleared)')
-            );
-          }
-          setBook((prev) => {
-            if (!prev) return prev;
-            const chapters = prev.chapters.map((ch, i) => {
-              const fch = fresh.chapters?.[i];
-              if (!fch || fch.summary === ch.summary) return ch;
-              return { ...ch, summary: fch.summary, summarized_at: fch.summarized_at };
-            });
-            return { ...prev, chapters };
-          });
-        }
-      } catch (err) {
-        console.warn('[summarize] poll failed:', err);
-      } finally {
-        pollInFlight.current = false;
-      }
-    }, SUMMARY_POLL_MS);
-    return () => clearInterval(id);
-  }, [bookId]);
 
   // ── Scroll to saved position ─────────────────────────────
 
@@ -201,8 +200,7 @@ export default function Reader({ bookId }) {
     lastSavedParagraph.current = paragraphIndex;
     lastSaveTime.current = now;
     api.updateState(bookId, {
-      current_chapter_index: chapterIndex,
-      semantic_paragraph_index: paragraphIndex,
+      reading_position: { chapter_index: chapterIndex, paragraph_index: paragraphIndex, offset: 0 },
     }).catch(console.error);
   }, [bookId, chapterIndex]);
 
@@ -217,6 +215,14 @@ export default function Reader({ bookId }) {
     return () => clearInterval(sampleTimerRef.current);
   }, [book, chapterIndex, samplePosition, maybeSavePosition]);
 
+  // Close context menu on scroll
+  useEffect(() => {
+    if (!contextMenuInfo) return;
+    const close = () => setContextMenuInfo(null);
+    window.addEventListener('scroll', close, { passive: true });
+    return () => window.removeEventListener('scroll', close);
+  }, [contextMenuInfo]);
+
   // ── Text selection ───────────────────────────────────────
 
   const dismissSelection = useCallback(() => {
@@ -225,50 +231,12 @@ export default function Reader({ bookId }) {
   }, []);
 
   useEffect(() => {
-    const onMouseUp = () => {
+    const onMouseUp = (e) => {
+      if (e.button !== 0) return; // ignore right-click mouseup; contextmenu handles that
       setTimeout(() => {
-        const sel = window.getSelection();
-        if (!sel || sel.isCollapsed || !sel.toString().trim()) {
-          setSelectionInfo(null);
-          return;
-        }
-        // Walk up from anchor/focus nodes to find their <p data-paragraph="N">
-        const findPara = (n) => {
-          while (n && !(n.nodeName === 'P' && n.dataset?.paragraph !== undefined)) n = n.parentNode;
-          return n;
-        };
-        const anchorPara = findPara(sel.anchorNode);
-        if (!anchorPara) { setSelectionInfo(null); return; }
-
-        const range = sel.getRangeAt(0);
-        const rect = range.getBoundingClientRect();
-
-        // Character offsets within the anchor paragraph
-        const nodeRange = document.createRange();
-        nodeRange.selectNodeContents(anchorPara);
-        nodeRange.setEnd(range.startContainer, range.startOffset);
-        const startOffset = nodeRange.toString().length;
-
-        // If the selection crosses a paragraph boundary, clamp to this paragraph's end
-        // so the stored offsets and selected_text stay valid within a single paragraph.
-        const focusPara = findPara(sel.focusNode);
-        const paraText = anchorPara.textContent;
-        const isCross = focusPara && focusPara !== anchorPara;
-        const endOffset = isCross ? paraText.length : startOffset + range.toString().length;
-        const text = isCross
-          ? paraText.slice(startOffset).trim()
-          : sel.toString().trim();
-
-        if (!text) { setSelectionInfo(null); return; }
-
-        setSelectionInfo({
-          rect,
-          text,
-          paragraphIndex: parseInt(anchorPara.dataset.paragraph, 10),
-          startOffset,
-          endOffset,
-        });
-        setActivePanel(null);
+        const info = computeSelectionInfo();
+        setSelectionInfo(info);
+        if (info) setActivePanel(null);
       }, 10);
     };
 
@@ -286,11 +254,9 @@ export default function Reader({ bookId }) {
     try {
       const ann = await api.createHighlight(bookId, {
         chapter_id: currentChapter.id,
-        chapter_index: chapterIndex,
-        paragraph_index: selectionInfo.paragraphIndex,
+        start: { chapter_index: chapterIndex, paragraph_index: selectionInfo.startParaIndex, offset: selectionInfo.startOffset },
+        end:   { chapter_index: chapterIndex, paragraph_index: selectionInfo.endParaIndex,   offset: selectionInfo.endOffset   },
         selected_text: selectionInfo.text,
-        start_offset: selectionInfo.startOffset,
-        end_offset: selectionInfo.endOffset,
       });
       setAllAnnotations((prev) => [...prev, ann]);
     } catch (err) { console.error(err); }
@@ -308,13 +274,26 @@ export default function Reader({ bookId }) {
     try {
       const ann = await api.createNote(bookId, {
         chapter_id: currentChapter.id,
-        chapter_index: chapterIndex,
-        paragraph_index: noteModalInfo.paragraphIndex,
+        position: { chapter_index: chapterIndex, paragraph_index: noteModalInfo.startParaIndex, offset: 0 },
         content,
       });
       setAllAnnotations((prev) => [...prev, ann]);
     } catch (err) { console.error(err); }
   }, [noteModalInfo, currentChapter, bookId, chapterIndex]);
+
+  const handleDiscuss = useCallback(async () => {
+    if (!selectionInfo || !currentChapter) return;
+    dismissSelection();
+    try {
+      const conv = await api.createConversation(bookId, {
+        chapter_id: currentChapter.id,
+        position: { chapter_index: chapterIndex, paragraph_index: selectionInfo.startParaIndex, offset: selectionInfo.startOffset },
+        selected_text: selectionInfo.text,
+      });
+      setActiveConversation(conv);
+      setAllAnnotations((prev) => [...prev, conv]);
+    } catch (err) { console.error(err); }
+  }, [selectionInfo, currentChapter, bookId, chapterIndex, dismissSelection]);
 
   const handleDelete = useCallback(async (annId) => {
     try {
@@ -322,6 +301,31 @@ export default function Reader({ bookId }) {
       setAllAnnotations((prev) => prev.filter((a) => a.id !== annId));
     } catch (err) { console.error(err); }
   }, [bookId]);
+
+  const handleContextMenu = useCallback((e) => {
+    if (e.target.closest('.ann-toolbar, .ann-panel, .modal-backdrop, .context-menu, .chat-panel')) return;
+    const items = [];
+
+    // Compute selection fresh from DOM — contextmenu fires before the mouseup setTimeout,
+    // so React state may not be updated yet.
+    const liveSelection = computeSelectionInfo();
+    if (liveSelection) {
+      setSelectionInfo(liveSelection);
+      items.push({ label: 'Highlight', variant: 'highlight', action: handleHighlight });
+      items.push({ label: 'Note',      variant: 'note',      action: handleNoteRequest });
+      items.push({ label: 'Discuss',   variant: 'discuss',   action: handleDiscuss });
+    }
+
+    const markEl = e.target.closest('[data-ann-id]');
+    if (markEl) {
+      const annId = markEl.dataset.annId;
+      items.push({ label: 'Remove highlight', variant: 'delete', action: () => handleDelete(annId) });
+    }
+
+    if (items.length === 0) return;
+    e.preventDefault();
+    setContextMenuInfo({ point: { x: e.clientX, y: e.clientY }, items });
+  }, [handleHighlight, handleNoteRequest, handleDiscuss, handleDelete]);
 
   // ── Chapter navigation ───────────────────────────────────
 
@@ -334,8 +338,7 @@ export default function Reader({ bookId }) {
     lastSavedParagraph.current = 0;
     lastSaveTime.current = Date.now();
     api.updateState(bookId, {
-      current_chapter_index: newIdx,
-      semantic_paragraph_index: 0,
+      reading_position: { chapter_index: newIdx, paragraph_index: 0, offset: 0 },
     }).catch(console.error);
     window.scrollTo({ top: 0, behavior: 'instant' });
     setChapterIndex(newIdx);
@@ -348,15 +351,15 @@ export default function Reader({ bookId }) {
   // ── Global dismiss on outside click ─────────────────────
 
   const handleRootClick = useCallback((e) => {
-    if (!e.target.closest('.ann-toolbar')) {
-      // Only clear the toolbar on a plain click (collapsed selection).
-      // If the user just finished a drag-select, the selection is still active
-      // here — leave it alone so the mouseup handler can set selectionInfo.
+    if (!e.target.closest('.ann-toolbar, .context-menu')) {
       const sel = window.getSelection();
       if (!sel || sel.isCollapsed) setSelectionInfo(null);
     }
     if (!e.target.closest('.ann-panel') && !e.target.closest('[data-paragraph]')) {
       setActivePanel(null);
+    }
+    if (!e.target.closest('.context-menu')) {
+      setContextMenuInfo(null);
     }
   }, []);
 
@@ -393,7 +396,7 @@ export default function Reader({ bookId }) {
   }
 
   return (
-    <div className="reader-root" onClick={handleRootClick}>
+    <div className={`reader-root${activeConversation ? ' chat-open' : ''}`} onClick={handleRootClick} onContextMenu={handleContextMenu}>
       {outlineOpen && (
         <Outline
           chapters={chapters}
@@ -403,12 +406,21 @@ export default function Reader({ bookId }) {
         />
       )}
 
-      {selectionInfo && (
+      {selectionInfo && !contextMenuInfo && (
         <AnnotationToolbar
           rect={selectionInfo.rect}
           onHighlight={handleHighlight}
           onNoteRequest={handleNoteRequest}
+          onDiscuss={handleDiscuss}
           onClose={dismissSelection}
+        />
+      )}
+
+      {contextMenuInfo && (
+        <ContextMenu
+          point={contextMenuInfo.point}
+          items={contextMenuInfo.items}
+          onClose={() => setContextMenuInfo(null)}
         />
       )}
 
@@ -468,7 +480,7 @@ export default function Reader({ bookId }) {
                   setActivePanel({ annotations: anns, rect: e.currentTarget.getBoundingClientRect() });
                 } : undefined}
               >
-                {highlights.length > 0 ? renderWithHighlights(text, highlights) : text}
+                {highlights.length > 0 ? renderWithHighlights(text, highlights, i) : text}
               </p>
             );
           })}
@@ -495,6 +507,14 @@ export default function Reader({ bookId }) {
           next chapter ▶
         </button>
       </footer>
+
+      {activeConversation && (
+        <ChatPanel
+          bookId={bookId}
+          conversation={activeConversation}
+          onClose={() => setActiveConversation(null)}
+        />
+      )}
     </div>
   );
 }

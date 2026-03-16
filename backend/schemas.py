@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from .models import Message
+from .models import Message, TextIndex
 
 
 class BookSummaryResponse(BaseModel):
@@ -8,8 +8,7 @@ class BookSummaryResponse(BaseModel):
     title: str
     author: str
     cover_base64: str | None
-    current_chapter_index: int
-    semantic_paragraph_index: int
+    reading_position: TextIndex
     chapter_count: int
     annotation_count: int
 
@@ -30,31 +29,27 @@ class BookDetailResponse(BookSummaryResponse):
 
 
 class StateUpdateRequest(BaseModel):
-    current_chapter_index: int
-    semantic_paragraph_index: int
+    reading_position: TextIndex
 
 
 class HighlightCreateRequest(BaseModel):
     chapter_id: str
-    chapter_index: int
-    paragraph_index: int
+    start: TextIndex
+    end: TextIndex
     selected_text: str
     content: str | None = None
-    start_offset: int | None = None
-    end_offset: int | None = None
 
 
 class NoteCreateRequest(BaseModel):
     chapter_id: str
-    chapter_index: int
-    paragraph_index: int
+    position: TextIndex
     content: str
 
 
 class ConversationCreateRequest(BaseModel):
     chapter_id: str
-    chapter_index: int
-    paragraph_index: int
+    position: TextIndex
+    selected_text: str | None = None
     title: str | None = None
 
 
@@ -62,9 +57,9 @@ class ConversationResponse(BaseModel):
     id: str
     book_id: str
     chapter_id: str
-    chapter_index: int
-    paragraph_index: int
+    position: TextIndex
     title: str | None
+    selected_text: str | None
     created_at: str
     messages: list[Message]
 

@@ -9,7 +9,7 @@ from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from .models import HighlightAnnotation, NoteAnnotation
+from .models import HighlightAnnotation, NoteAnnotation, TextIndex
 from .schemas import (
     BookSummaryResponse,
     BookDetailResponse,
@@ -19,7 +19,8 @@ from .schemas import (
 )
 from .store import store, BOOKS_DIR, ANNOTATIONS_DIR
 from .epub import ingest_epub
-from .summarize import run_summarize, task_error_handler, N_THRESHOLD, PARTIAL_INTERVAL
+from .summarize import run_summarize, task_error_handler
+from .chat import router as chat_router
 
 load_dotenv()
 
@@ -31,6 +32,7 @@ logging.basicConfig(
 )
 
 app = FastAPI(title="Bibliophile", version="0.1.0")
+app.include_router(chat_router)
 
 cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
 app.add_middleware(
@@ -68,8 +70,7 @@ async def upload_book(file: UploadFile = File(...)):
         title=book.title,
         author=book.author,
         cover_base64=book.cover_base64,
-        current_chapter_index=book.current_chapter_index,
-        semantic_paragraph_index=book.semantic_paragraph_index,
+        reading_position=book.reading_position,
         chapter_count=len(book.chapters),
         annotation_count=count,
     )
@@ -99,12 +100,10 @@ async def delete_book(book_id: str):
 @app.put("/books/{book_id}/state", status_code=204)
 async def update_state(book_id: str, req: StateUpdateRequest):
     book = await store.get_book(book_id)
-    old_chapter = book.current_chapter_index
-    new_chapter = req.current_chapter_index
-    new_para = req.semantic_paragraph_index
+    old_chapter = book.reading_position.chapter_index
+    new_chapter = req.reading_position.chapter_index
 
-    book.current_chapter_index = new_chapter
-    book.semantic_paragraph_index = new_para
+    book.reading_position = req.reading_position
     await store.save_book(book)
 
     if new_chapter > old_chapter:
@@ -114,18 +113,6 @@ async def update_state(book_id: str, req: StateUpdateRequest):
             name=f"summarize/{book_id}/ch{old_chapter}/complete",
         )
         t.add_done_callback(task_error_handler)
-    elif new_chapter == old_chapter and book.chapters:
-        ch = book.chapters[new_chapter]
-        if new_para >= N_THRESHOLD:
-            last = ch.summarized_to_paragraph or 0
-            if new_para - last >= PARTIAL_INTERVAL:
-                t = asyncio.create_task(
-                    run_summarize(
-                        book_id, new_chapter, is_complete=False, up_to_paragraph=new_para
-                    ),
-                    name=f"summarize/{book_id}/ch{new_chapter}/partial@{new_para}",
-                )
-                t.add_done_callback(task_error_handler)
 
 
 @app.post("/books/{book_id}/chapters/{chapter_index}/summarize", status_code=202)
@@ -152,21 +139,19 @@ async def list_annotations(book_id: str):
 
 @app.post("/books/{book_id}/annotations/highlight", response_model=None)
 async def create_highlight(book_id: str, req: HighlightCreateRequest):
-    # Verify book exists
     await store.get_book(book_id)
 
     ann = HighlightAnnotation(
         id=f"highlight/{uuid.uuid4()}",
         book_id=book_id,
         chapter_id=req.chapter_id,
-        chapter_index=req.chapter_index,
-        paragraph_index=req.paragraph_index,
+        position=req.start,
         created_at=_now(),
         type="highlight",
+        start=req.start,
+        end=req.end,
         selected_text=req.selected_text,
         content=req.content,
-        start_offset=req.start_offset,
-        end_offset=req.end_offset,
     )
     await store.save_annotation(book_id, ann)
     return ann.model_dump()
@@ -180,8 +165,7 @@ async def create_note(book_id: str, req: NoteCreateRequest):
         id=f"note/{uuid.uuid4()}",
         book_id=book_id,
         chapter_id=req.chapter_id,
-        chapter_index=req.chapter_index,
-        paragraph_index=req.paragraph_index,
+        position=req.position,
         created_at=_now(),
         type="note",
         content=req.content,
