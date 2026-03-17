@@ -4,7 +4,6 @@ import Outline from '../components/Outline.jsx';
 import AnnotationToolbar from '../components/AnnotationToolbar.jsx';
 import AnnotationPanel from '../components/AnnotationPanel.jsx';
 import NoteModal from '../components/NoteModal.jsx';
-import ContextMenu from '../components/ContextMenu.jsx';
 import ChatPanel from '../components/ChatPanel.jsx';
 
 const SAMPLE_INTERVAL_MS = 500;
@@ -12,7 +11,7 @@ const SAVE_DEBOUNCE_MS = 2000;
 
 function renderWithHighlights(text, highlights, paragraphIndex) {
   const resolved = highlights
-    .filter(h => h.type === 'highlight')
+    .filter(h => h.start && h.end)
     .map((h) => {
       const sp = h.start.paragraph_index, ep = h.end.paragraph_index;
       let s, e;
@@ -29,12 +28,14 @@ function renderWithHighlights(text, highlights, paragraphIndex) {
 
   const parts = [];
   let pos = 0;
+  // Overlapping annotations of different types need a richer segmentation model.
+  // For now we render in start-order and let later overlaps yield to earlier spans.
   for (const h of resolved) {
     const start = Math.max(h._s, pos);
     const end = Math.min(h._e, text.length);
     if (start >= end) continue;
     if (start > pos) parts.push(text.slice(pos, start));
-    parts.push(<mark key={h.id} data-ann-id={h.id} className="inline-highlight">{text.slice(start, end)}</mark>);
+    parts.push(<mark key={h.id} data-ann-id={h.id} className={`inline-highlight inline-highlight--${h.type}`}>{text.slice(start, end)}</mark>);
     pos = end;
   }
   if (pos < text.length) parts.push(text.slice(pos));
@@ -79,8 +80,8 @@ function buildAnnotationMap(annotations, forChapter) {
   const map = new Map();
   if (!Array.isArray(annotations)) return map;
   for (const ann of annotations) {
-    if (ann.type === 'highlight') {
-      if (ann.start?.chapter_index !== forChapter) continue;
+    if (ann.start && ann.end) {
+      if (ann.start.chapter_index !== forChapter) continue;
       for (let i = ann.start.paragraph_index; i <= ann.end.paragraph_index; i++) {
         if (!map.has(i)) map.set(i, []);
         map.get(i).push(ann);
@@ -116,8 +117,6 @@ export default function Reader({ bookId }) {
   const [noteModalInfo, setNoteModalInfo] = useState(null);
   // Annotation detail panel
   const [activePanel, setActivePanel] = useState(null); // { annotations, rect }
-  // Right-click context menu
-  const [contextMenuInfo, setContextMenuInfo] = useState(null); // { point: {x,y}, items: [] }
   // Active conversation for chat panel
   const [activeConversation, setActiveConversation] = useState(null);
 
@@ -215,14 +214,6 @@ export default function Reader({ bookId }) {
     return () => clearInterval(sampleTimerRef.current);
   }, [book, chapterIndex, samplePosition, maybeSavePosition]);
 
-  // Close context menu on scroll
-  useEffect(() => {
-    if (!contextMenuInfo) return;
-    const close = () => setContextMenuInfo(null);
-    window.addEventListener('scroll', close, { passive: true });
-    return () => window.removeEventListener('scroll', close);
-  }, [contextMenuInfo]);
-
   // ── Text selection ───────────────────────────────────────
 
   const dismissSelection = useCallback(() => {
@@ -243,6 +234,14 @@ export default function Reader({ bookId }) {
     window.addEventListener('mouseup', onMouseUp);
     return () => window.removeEventListener('mouseup', onMouseUp);
   }, []);
+
+  // Hide selection toolbar while scrolling so it never lags behind the text.
+  useEffect(() => {
+    if (!selectionInfo) return;
+    const onScroll = () => dismissSelection();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [selectionInfo, dismissSelection]);
 
   // ── Annotation CRUD ──────────────────────────────────────
 
@@ -274,7 +273,9 @@ export default function Reader({ bookId }) {
     try {
       const ann = await api.createNote(bookId, {
         chapter_id: currentChapter.id,
-        position: { chapter_index: chapterIndex, paragraph_index: noteModalInfo.startParaIndex, offset: 0 },
+        start: { chapter_index: chapterIndex, paragraph_index: noteModalInfo.startParaIndex, offset: noteModalInfo.startOffset },
+        end: { chapter_index: chapterIndex, paragraph_index: noteModalInfo.endParaIndex, offset: noteModalInfo.endOffset },
+        selected_text: noteModalInfo.text,
         content,
       });
       setAllAnnotations((prev) => [...prev, ann]);
@@ -287,7 +288,8 @@ export default function Reader({ bookId }) {
     try {
       const conv = await api.createConversation(bookId, {
         chapter_id: currentChapter.id,
-        position: { chapter_index: chapterIndex, paragraph_index: selectionInfo.startParaIndex, offset: selectionInfo.startOffset },
+        start: { chapter_index: chapterIndex, paragraph_index: selectionInfo.startParaIndex, offset: selectionInfo.startOffset },
+        end:   { chapter_index: chapterIndex, paragraph_index: selectionInfo.endParaIndex,   offset: selectionInfo.endOffset   },
         selected_text: selectionInfo.text,
       });
       setActiveConversation(conv);
@@ -301,31 +303,6 @@ export default function Reader({ bookId }) {
       setAllAnnotations((prev) => prev.filter((a) => a.id !== annId));
     } catch (err) { console.error(err); }
   }, [bookId]);
-
-  const handleContextMenu = useCallback((e) => {
-    if (e.target.closest('.ann-toolbar, .ann-panel, .modal-backdrop, .context-menu, .chat-panel')) return;
-    const items = [];
-
-    // Compute selection fresh from DOM — contextmenu fires before the mouseup setTimeout,
-    // so React state may not be updated yet.
-    const liveSelection = computeSelectionInfo();
-    if (liveSelection) {
-      setSelectionInfo(liveSelection);
-      items.push({ label: 'Highlight', variant: 'highlight', action: handleHighlight });
-      items.push({ label: 'Note',      variant: 'note',      action: handleNoteRequest });
-      items.push({ label: 'Discuss',   variant: 'discuss',   action: handleDiscuss });
-    }
-
-    const markEl = e.target.closest('[data-ann-id]');
-    if (markEl) {
-      const annId = markEl.dataset.annId;
-      items.push({ label: 'Remove highlight', variant: 'delete', action: () => handleDelete(annId) });
-    }
-
-    if (items.length === 0) return;
-    e.preventDefault();
-    setContextMenuInfo({ point: { x: e.clientX, y: e.clientY }, items });
-  }, [handleHighlight, handleNoteRequest, handleDiscuss, handleDelete]);
 
   // ── Chapter navigation ───────────────────────────────────
 
@@ -351,15 +328,12 @@ export default function Reader({ bookId }) {
   // ── Global dismiss on outside click ─────────────────────
 
   const handleRootClick = useCallback((e) => {
-    if (!e.target.closest('.ann-toolbar, .context-menu')) {
+    if (!e.target.closest('.ann-toolbar')) {
       const sel = window.getSelection();
       if (!sel || sel.isCollapsed) setSelectionInfo(null);
     }
     if (!e.target.closest('.ann-panel') && !e.target.closest('[data-paragraph]')) {
       setActivePanel(null);
-    }
-    if (!e.target.closest('.context-menu')) {
-      setContextMenuInfo(null);
     }
   }, []);
 
@@ -396,7 +370,7 @@ export default function Reader({ bookId }) {
   }
 
   return (
-    <div className={`reader-root${activeConversation ? ' chat-open' : ''}`} onClick={handleRootClick} onContextMenu={handleContextMenu}>
+    <div className={`reader-root${activeConversation ? ' chat-open' : ''}`} onClick={handleRootClick}>
       {outlineOpen && (
         <Outline
           chapters={chapters}
@@ -406,23 +380,13 @@ export default function Reader({ bookId }) {
         />
       )}
 
-      {selectionInfo && !contextMenuInfo && (
-        <AnnotationToolbar
-          rect={selectionInfo.rect}
-          onHighlight={handleHighlight}
-          onNoteRequest={handleNoteRequest}
-          onDiscuss={handleDiscuss}
-          onClose={dismissSelection}
-        />
-      )}
-
-      {contextMenuInfo && (
-        <ContextMenu
-          point={contextMenuInfo.point}
-          items={contextMenuInfo.items}
-          onClose={() => setContextMenuInfo(null)}
-        />
-      )}
+      <AnnotationToolbar
+        open={Boolean(selectionInfo)}
+        rect={selectionInfo?.rect ?? null}
+        onHighlight={handleHighlight}
+        onNoteRequest={handleNoteRequest}
+        onDiscuss={handleDiscuss}
+      />
 
       {noteModalInfo && (
         <NoteModal
@@ -461,11 +425,9 @@ export default function Reader({ bookId }) {
 
           {(currentChapter?.paragraphs ?? []).map((text, i) => {
             const anns = annotationMap.get(i);
-            const highlights = anns?.filter((a) => a.type === 'highlight') ?? [];
-            const hasNote = anns?.some((a) => a.type === 'note');
+            const inlineAnnotations = anns?.filter((a) => a.start && a.end) ?? [];
             const cls = [
               'reader-paragraph',
-              hasNote ? 'has-note' : '',
               i === currentParaIdx ? 'is-current-pos' : '',
             ].filter(Boolean).join(' ');
 
@@ -475,12 +437,15 @@ export default function Reader({ bookId }) {
                 data-paragraph={i}
                 className={cls}
                 onClick={anns?.length ? (e) => {
+                  const sel = window.getSelection();
+                  if (sel && !sel.isCollapsed && sel.toString().trim()) return; // user just selected text
+                  if (!e.target.closest('mark.inline-highlight')) return; // must click the highlight itself
                   e.stopPropagation();
                   dismissSelection();
                   setActivePanel({ annotations: anns, rect: e.currentTarget.getBoundingClientRect() });
                 } : undefined}
               >
-                {highlights.length > 0 ? renderWithHighlights(text, highlights, i) : text}
+                {inlineAnnotations.length > 0 ? renderWithHighlights(text, inlineAnnotations, i) : text}
               </p>
             );
           })}
