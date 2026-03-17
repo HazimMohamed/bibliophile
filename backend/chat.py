@@ -20,11 +20,13 @@ def _now() -> str:
 def _to_response(ann: ConversationAnnotation) -> ConversationResponse:
     return ConversationResponse(
         id=ann.id,
+        type=ann.type,
         book_id=ann.book_id,
         chapter_id=ann.chapter_id,
-        position=ann.position,
-        title=ann.title,
+        start=ann.start,
+        end=ann.end,
         selected_text=ann.selected_text,
+        title=ann.title,
         created_at=ann.created_at,
         messages=ann.messages,
     )
@@ -37,11 +39,13 @@ async def create_conversation(book_id: str, req: ConversationCreateRequest):
         id=f"conversation/{uuid.uuid4()}",
         book_id=book_id,
         chapter_id=req.chapter_id,
-        position=req.position,
-        created_at=_now(),
-        type="conversation",
+        position=req.start,
+        start=req.start,
+        end=req.end,
         selected_text=req.selected_text,
         title=req.title,
+        created_at=_now(),
+        type="conversation",
     )
     await store.save_annotation(book_id, ann)
     return _to_response(ann)

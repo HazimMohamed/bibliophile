@@ -806,8 +806,8 @@ body {
 
 .ann-panel {
   z-index: 150;
-  width: 300px;
-  max-height: 200px;
+  width: min(460px, calc(100vw - 24px));
+  max-height: min(62vh, 560px);
   background: var(--color-surface-panel);
   border: 1px solid var(--color-selection-toolbar-border);
   border-radius: var(--radius);
@@ -901,12 +901,35 @@ body {
   margin-top: 4px;
 }
 
+.ann-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .ann-item-type {
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--color-text-muted);
+}
+
+.ann-item-resume {
+  font-size: 0.75rem;
+  font-family: inherit;
+  color: var(--color-chat);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  transition: color 0.1s, background 0.1s;
+}
+
+.ann-item-resume:hover {
+  color: var(--color-chat-hover);
+  background: var(--color-hover-soft);
 }
 
 .ann-item-delete {
@@ -923,6 +946,34 @@ body {
 
 .ann-item-delete:hover {
   color: var(--color-danger);
+}
+
+.ann-conv-preview {
+  margin: 0 0 6px;
+  padding: 8px 9px;
+  border-radius: var(--radius-sm);
+  background: var(--color-chat-soft);
+  border: 1px solid var(--color-border-soft);
+}
+
+.ann-conv-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.ann-conv-snippet {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--color-text);
+  line-height: 1.45;
+  word-break: break-word;
 }
 
 /* ─── Context menu (right-click) ──────────────────────── */

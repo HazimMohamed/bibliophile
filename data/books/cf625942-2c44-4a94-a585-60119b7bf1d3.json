@@ -4,8 +4,12 @@
   "author": "Fyodor Dostoyevsky",
   "epub_path": "data/books/cf625942-2c44-4a94-a585-60119b7bf1d3.epub",
   "cover_base64": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzFhMjAyOCIvPjxyZWN0IHg9IjEwIiB5PSIxMCIgd2lkdGg9IjE4MCIgaGVpZ2h0PSIyODAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZhOWJjYyIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuNCIvPjxsaW5lIHgxPSI0MCIgeTE9Ijg0IiB4Mj0iMTYwIiB5Mj0iODQiIHN0cm9rZT0iIzZhOWJjYyIgc3Ryb2tlLXdpZHRoPSIxIi8+PHRleHQgeD0iMTAwIiB5PSIxMjQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjIxIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2UwZThmMCIgbGV0dGVyLXNwYWNpbmc9IjIiPlBPT1IgRk9MSzwvdGV4dD48bGluZSB4MT0iNDAiIHkxPSIxNjQiIHgyPSIxNjAiIHkyPSIxNjQiIHN0cm9rZT0iIzZhOWJjYyIgc3Ryb2tlLXdpZHRoPSIxIi8+PHRleHQgeD0iMTAwIiB5PSIxOTQiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjZTBlOGYwIiBvcGFjaXR5PSIwLjY1IiBsZXR0ZXItc3BhY2luZz0iMSI+RnlvZG9yIERvc3RveWV2c2t5PC90ZXh0Pjwvc3ZnPg==",
-  "current_chapter_index": 9,
-  "semantic_paragraph_index": 29,
+  "cover_source": null,
+  "reading_position": {
+    "chapter_index": 2,
+    "paragraph_index": 0,
+    "offset": 0
+  },
   "chapters": [
     {
       "id": "chapter/c5b55f61-2847-4527-ae67-a8eeea6c24a3",
@@ -21,9 +25,8 @@
         "Other information and formats: www.gutenberg.org/ebooks/2302",
         "Credits: Produced by Martin Adamson and David Widger"
       ],
-      "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summary": "I need to be honest about what I've received: this isn't a chapter of the novel itself. What you've provided is only the title page and publication metadata for the Project Gutenberg edition of *Poor Folk* by Dostoyevsky, translated by C. J. Hogarth.\n\nThere is no actual narrative content here—no characters, plot, dialogue, or events from the story. I have nothing to summarize because the text provided contains only:\n\n- The book's title and author\n- Publication information (release date: August 1, 2000; eBook #2302)\n- Translator credit\n- Language and source information\n\nTo write a proper memory-summary as instructed, I would need the actual opening chapter of the novel—the text where the story and characters begin.\n\nCould you provide the actual chapter text? Once I have the narrative content, I'll be able to give you a faithful summary of what happens, who appears, what I notice, and what seems significant.",
+      "summarized_at": "2026-03-17T01:05:15.512572Z"
     },
     {
       "id": "chapter/f071e1b0-08ab-473e-8519-72021bd3c03d",
@@ -74,9 +77,8 @@
         "September 29th.",
         "September 30th."
       ],
-      "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summary": "I need to be direct: what you've provided is not a readable chapter. \n\nYou've given me a list of dates spanning from April 12th through September 30th, with no narrative content, dialogue, description, or events attached to any of them.\n\nThis appears to be a table of contents or index of dated entries—possibly indicating that *Poor Folk* is structured as a series of letters or diary entries organized by date. But the actual *content* of those entries is not present in what you've shared.\n\nTo write a genuine summary as instructed, I would need the actual text—the words, thoughts, and actions that appear under each date heading.\n\nCould you provide the full chapter text with the actual narrative content included?",
+      "summarized_at": "2026-03-17T01:05:15.315303Z"
     },
     {
       "id": "chapter/a7f632cb-debc-471a-8754-1273789f55be",
@@ -95,9 +97,8 @@
         "MAKAR DIEVUSHKIN.",
         "P.S.—One thing I beg of you above all things—and that is, that you will answer this letter as FULLY as possible. With the letter I send you a packet of bonbons. Eat them for your health’s sake, nor, for the love of God, feel any uneasiness about me. Once more, dearest one, good-bye."
       ],
-      "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summary": "# Memory of Chapter 3: \"April 8th\"\n\nThis chapter is a letter from Makar Dievushkin to Barbara Alexievna, and it is entirely devoted to his happiness and longing for her.\n\n**The man and his mood:**\nMakar is a lonely, aging man of modest means living in a new, humble room in a tenement house. He is tender, earnest, somewhat verbose, and deeply attached to Barbara. He writes with an almost trembling eagerness—this letter pours out his affection and his delight at small things. He is self-conscious about his age, his poverty, and his station (he works as a copying clerk in some government office), yet he carries a touching dignity and devotion.\n\n**The signal between them:**\nMakar has devised a simple system: when Barbara raises the curtain in her window (which is opposite his across a narrow courtyard), it signals that she is thinking of him and well. When she lowers it, it means he should sleep. He awoke the previous night to see the curtain raised and felt overwhelmed with joy—it seemed to him he could see her face watching him from the darkness.\n\n**His new lodging:**\nHe has just moved to a room that is actually a partitioned section of a large kitchen in a tenement. It's small and humble, but he emphasizes it is *comfortable* and *convenient*—and crucially, it costs only 24 roubles instead of his previous 30, allowing him small luxuries like tea with sugar. The tenement is chaotic (\"a perfect Noah's Ark\") housing various types—officers, a literary government clerk, a midshipman, an English tutor. The landlady is quarrelsome and dirty.\n\n**What he tells Barbara:**\n- He slept well despite the new lodging and woke joyously at dawn\n- He saw her pass through the courtyard that morning, looking lovely as \"a bird in spring\"\n- He has sent her geraniums and bonbons as gifts, and offers mignonette if she wishes\n- He urges her not to grieve, and speaks warmly of her companion Thedora\n\n**His tone:**\nAffectionate, almost reverential toward Barbara. He calls her \"my angel,\" \"my heart's delight,\" \"my darling.\" He is also somewhat garrulous—he fills the letter with digressions, quotations from a little book about spring, and elaborate justifications for his modest living situation. There is an anxiety beneath the tenderness: he is acutely aware of being poor, aging, and insignificant. Yet he wants Barbara to see him as someone with dignity and spirit, not just a wretch.\n\n**What lodges in memory:**\n- The curtain signal feels like their private language, intimate and poignant\n- His constant self-deprecation (\"this miserable wretch,\" \"insignificant old fellow\") contrasts with his evident sensitivity and capacity for joy\n- The mention of tea as a social/genteel necessity rather than mere sustenance reveals his status anxiety\n- He has clearly saved money to afford this move, suggesting careful, hopeful planning\n- Barbara appears to be in some distress (he tells her not to grieve, mentions she is unwell), though the nature of her troubles is not yet clear\n- There is a question of whether Barbara returns his affection with equal fervor—he seems to be coaxing and reassuring her\n\nThe chapter reads as the opening of a correspondence between two people bound by poverty and proximity, with Makar the more openly yearning of the two.",
+      "summarized_at": "2026-03-16T23:21:23.217983Z"
     },
     {
       "id": "chapter/1be53c71-120d-489c-9128-c942356e8c33",
@@ -112,9 +113,8 @@
         "But dusk is coming on, and I must set to work again. Much else should I have liked to write to you, but time is lacking, and I must hasten. Of course, to write this letter is a pleasure enough, and could never be wearisome; but why do you not come to see me in person? Why do you not, Makar Alexievitch? You live so close to me, and at least SOME of your time is your own. I pray you, come. I have just seen Theresa. She was looking so ill, and I felt so sorry for her, that I gave her twenty kopecks. I am almost falling asleep. Write to me in fullest detail, both concerning your mode of life, and concerning the people who live with you, and concerning how you fare with them. I should so like to know! Yes, you must write again. Tonight I have purposely looped the curtain up. Go to bed early, for, last night, I saw your candle burning until nearly midnight. Goodbye! I am now feeling sad and weary. Ah that I should have to spend such days as this one has been. Again good-bye.—Your friend,",
         "BARBARA DOBROSELOVA."
       ],
-      "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summary": "# Memory of Chapter 4: \"April 8th\"\n\nThis is Barbara Alexievna's reply to Makar's letter—her voice answering his for the first time in this exchange. She is tender but burdened, loving but guarded, and the letter reveals a very different portrait of their relationship than his jubilant account suggested.\n\n**Her Reproach and Affection**\n\nBarbara begins by quarreling with him gently but seriously: she cannot accept his gifts because she knows they cost him deprivation. She's told him repeatedly she needs nothing, and she feels guilty that she can never repay his kindness. The geraniums particularly trouble her—beautiful as they are (she's displayed them prominently in her window), she recognizes they're expensive. His bonbons likewise. She's aware that he acts on her unguarded remarks: she mentions geraniums casually, and he immediately buys them. She reads his letter as \"poetry\"—full of spring rapture, paradise, sweet odours—but she also recognizes it as a sign that something is consuming him, that he's become entangled in caring for her.\n\n**The Curtain Mystery Resolved**\n\nImportantly, Barbara reveals that the curtain signal he was so proud of inventing was actually accidental on her part: when she moved the flower-pots, the curtain looped itself up. He saw intention where there was mere chance. This detail lodges deeply—it suggests Makar may be reading meaning into her actions that she hasn't consciously placed there.\n\n**Her Knowledge of His Sacrifice**\n\nBarbara sees through his self-deception about the room. She knows he's taken cheap, uncomfortable lodgings near her window not for \"comfort and economy\" as he claimed, but to be close to her. She knows from Thedora that his circumstances were once more affluent. She understands he's denying himself necessaries—that he chose a place where he'll be \"worried and disturbed\" and has \"neither elbow-space nor comfort,\" despite loving solitude and quiet. She's distressed by this: \"how my heart aches for you!\" She begs him not to overtask his health, noting his weak eyes and late-night work by candlelight. She urges him not to waste money on her, acknowledging what she clearly feels acutely: \"I know how much you love me, but I also know that you are not rich.\"\n\nThere's guilt and sorrow in this acknowledgment. She cannot reciprocate what he's giving.\n\n**Her Own Darkness**\n\nThe second half of the letter shifts to Barbara's inner state, and it's bleak. This morning she rose in good spirits, worked on some silk (suggesting she does needlework or sewing for income), felt cheerful—but as the day progressed, her thoughts turned \"dark and sad\" and her \"heart is ready to sink.\"\n\nShe confesses deep anxiety about the future: she cannot foretell what will happen, and this uncertainty \"distresses me deeply.\" Looking back at the past is even worse—it contains \"sorrow that breaks my very heart at the thought of it.\" She speaks of \"wicked people who have wrecked my life\" and says she could spend \"a whole century in tears\" because of them.\n\nThis is trauma or tragedy of some kind. Her past has been destroyed by others' cruelty. The specifics remain opaque, but the pain is real and present.\n\n**Her Longing and Her Distance**\n\nDespite her affection for Makar, there's a request that feels like a gentle plea: why doesn't he come see her in person? He lives so close, surely some of his time is his own? She wants to see him, not just exchange letters.\n\nYet she also asks him to write in \"fullest detail\" about his mode of life, the people he lives with, how he fares with them. It's as if she needs to know him thoroughly through letters—more thoroughly, perhaps, than his presence alone would allow.\n\nShe mentions that she's just seen Theresa (the name shifts to this spelling here) looking ill, and she gave her twenty kopecks out of pity. This suggests Barbara has limited means herself, yet gives what little she has.\n\n**What I Notice and Remember**\n\nThe dynamic between them is becoming clearer, but it's tilted and painful. Makar's love appears to be expressed through self-sacrifice and material gift-giving—he's impoverishing himself to prove devotion. Barbara receives these gifts with guilt and sorrow, unable to reciprocate materially or perhaps emotionally in the way he needs. She knows he's suffering for her and feels",
+      "summarized_at": "2026-03-16T23:21:25.079590Z"
     },
     {
       "id": "chapter/45ee1a0c-66cf-4f9b-9bf0-758ce2a6b03e",
@@ -127,9 +127,8 @@
         "MAKAR DIEVUSHKIN.",
         "P.S.—Do not think that I could write to you in a satirical vein, for I am too old to show my teeth to no purpose, and people would laugh at me, and quote our Russian proverb: “Who diggeth a pit for another one, the same shall fall into it himself.”"
       ],
-      "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summary": "# My Memory of Chapter 5: \"April 8th\"\n\nThis is a letter from Makar Dievushkin to Barbara Alexievna, and it feels like the raw outpouring of a confused, lonely old man caught between tenderness and self-doubt.\n\n**Who Makar is (as revealed here):**\nAn elderly, uneducated man in modest circumstances—not noble-born, his father was common. He works in an office. He's aware of his age, his lack of education, his clumsiness with words. He presents himself as Barbara's distant kinsman (seventh remove) and now her protector, though something about how he protests this suggests he may have feelings beyond the paternal.\n\n**The emotional core:**\nMakar is in some kind of upheaval. He went to work in high spirits because of Barbara—his \"heart was under your influence\"—but the familiar grey office seemed suddenly strange to him. On the walk home his feet lagged, he got cold. He's trying to convince Barbara (and perhaps himself) that what he feels is purely protective and familial, nothing more. Yet he admits he saw her at her window today and watched her draw the blind.\n\n**His living situation:**\nHe's recently moved to a new room and misses his old one deeply. For nearly twenty years he lived in a cosy space with an old landlady (now dead) and her granddaughter Masha, who was a baby then but is now thirteen. Those memories haunt him—the candlelit evenings, the stories, the simple contentment. The old woman made patchwork quilts and never overcharged him. This loss seems to weigh on him as much as confusion about Barbara.\n\n**What troubles him:**\nBarbara has written asking why he doesn't visit her in person. He refuses because of what people would say—gossip and scandal would arise. He'll see her instead at Vespers tomorrow. He's also apologizing for the rambling, disjointed nature of the letter itself, blaming his age and lack of education.\n\n**The mood:**\nMelancholic, restless, aching. An old man caught between sentiment and shame, between tenderness and propriety, between a lost past and an uncertain present. His head and back ache. Darkness is falling. There's something unresolved and painful beneath his words.",
+      "summarized_at": "2026-03-16T19:51:59.679112Z"
     },
     {
       "id": "chapter/abbcb31a-d129-452c-9976-1cd006f71239",
@@ -142,9 +141,8 @@
         "Today I am not well. By turns I shiver and flush with heat, and Thedora is greatly disturbed about me.... Do not scruple to come and see me, Makar Alexievitch. How can it concern other people what you do? You and I are well enough acquainted with each other, and one’s own affairs are one’s own affairs. Goodbye, Makar Alexievitch, for I have come to the end of all I had to say, and am feeling too unwell to write more. Again I beg of you not to be angry with me, but to rest assured of my constant respect and attachment.—Your humble, devoted servant,",
         "BARBARA DOBROSELOVA."
       ],
-      "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summary": "# Memory of Chapter 6: \"April 9th\"\n\nThis chapter consists entirely of a letter from Barbara Dobroselova to Makar Alexievitch.\n\n**The emotional core:** Barbara is apologizing and reassuring Makar, addressing what seems to be a misunderstanding between them. Makar has written to her in despondency, apparently offended or hurt, and Barbara is distressed by this. She insists she would never mock him—not his age, not his character. She acknowledges her own \"levity\" and weariness with life as the source of any thoughtless words she may have spoken.\n\n**What Barbara emphasizes:**\n- She values Makar deeply as friend and benefactor\n- She is genuinely grateful for his protection from enemies, hatred, and persecution\n- She prays for him and believes his fortune depends on her prayers\n- She respects him and feels constant attachment to him\n- She addresses him as \"Kind comrade and helper\"\n\n**Her current state:** Barbara is physically unwell on this day—alternately shivering and flushing with heat. Thedora (presumably a servant or companion) is worried about her. Despite her illness, she wrote this letter to mend things with Makar.\n\n**Unresolved question:** What exactly did Barbara say that offended Makar? The letter references his despondency and suggests he felt mocked, but the specific offense remains unclear to me.\n\nThe tone is tender, apologetic, and reveals an emotional dependency—Barbara is genuinely troubled by Makar's displeasure with her.",
+      "summarized_at": "2026-03-16T19:51:56.962209Z"
     },
     {
       "id": "chapter/dad1ff02-9b23-43cd-81a1-3013d1526854",
@@ -161,8 +159,7 @@
         "MAKAR DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/4cd1f4ec-d092-4401-a00d-20e9f05cd1cf",
@@ -173,8 +170,7 @@
         "MY DEAREST MAKAR ALEXIEVITCH,—Today I met my cousin Sasha. To see her going to wrack and ruin shocked me terribly. Moreover, it has reached me, through a side wind, that she has been making inquiry for me, and dogging my footsteps, under the pretext that she wishes to pardon me, to forget the past, and to renew our acquaintance. Well, among other things she told me that, whereas you are not a kinsman of mine, that she is my nearest relative; that you have no right whatever to enter into family relations with us; and that it is wrong and shameful for me to be living upon your earnings and charity. Also, she said that I must have forgotten all that she did for me, though thereby she saved both myself and my mother from starvation, and gave us food and drink; that for two and a half years we caused her great loss; and, above all things, that she excused us what we owed her. Even my poor mother she did not spare. Would that she, my dead parent, could know how I am being treated! But God knows all about it.... Also, Anna declared that it was solely through my own fault that my fortunes declined after she had bettered them; that she is in no way responsible for what then happened; and that I have but myself to blame for having been either unable or unwilling to defend my honour. Great God! WHO, then, has been at fault? According to Anna, Hospodin [Mr.] Bwikov was only right when he declined to marry a woman who—But need I say it? It is cruel to hear such lies as hers. What is to become of me I do not know. I tremble and sob and weep. Indeed, even to write this letter has cost me two hours. At least it might have been thought that Anna would have confessed HER share in the past. Yet see what she says!... For the love of God do not be anxious about me, my friend, my only benefactor. Thedora is over apt to exaggerate matters. I am not REALLY ill. I have merely caught a little cold. I caught it last night while I was walking to Bolkovo, to hear Mass sung for my mother. Ah, mother, my poor mother! Could you but rise from the grave and learn what is being done to your daughter!"
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/21bf49b9-71ff-4d9d-9bfb-b475caff7b92",
@@ -188,8 +184,7 @@
         "P.S.—But what is this, dearest one, that you have written to me? Why do you place me upon such a pedestal? Moreover, how could I come and visit you frequently? How, I repeat? Of course, I might avail myself of the cover of night; but, alas! the season of the year is what it is, and includes no night time to speak of. In fact, although, throughout your illness and delirium, I scarcely left your side for a moment, I cannot think how I contrived to do the many things that I did. Later, I ceased to visit you at all, for the reason that people were beginning to notice things, and to ask me questions. Yet, even so, a scandal has arisen. Theresa I trust thoroughly, for she is not a talkative woman; but consider how it will be when the truth comes out in its entirety! What THEN will folk not say and think? Nevertheless, be of good cheer, my beloved, and regain your health. When you have done so we will contrive to arrange a rendezvous out of doors."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/8f721cc3-a7ff-4fe2-b462-e1719265d215",
@@ -273,8 +268,7 @@
         "The funeral was arranged for by Anna Thedorovna. A plain coffin was bought, and a broken-down hearse hired; while, as security for this outlay, she seized the dead man’s books and other articles. Nevertheless, the old man disputed the books with her, and, raising an uproar, carried off as many of them as he could—stuffing his pockets full, and even filling his hat. Indeed, he spent the next three days with them thus, and refused to let them leave his sight even when it was time for him to go to church. Throughout he acted like a man bereft of sense and memory. With quaint assiduity he busied himself about the bier—now straightening the candlestick on the dead man’s breast, now snuffing and lighting the other candles. Clearly his thoughts were powerless to remain long fixed on any subject. Neither my mother nor Anna Thedorovna were present at the requiem, for the former was ill and the latter was at loggerheads with the old man. Only myself and the father were there. During the service a sort of panic, a sort of premonition of the future, came over me, and I could hardly hold myself upright. At length the coffin had received its burden and was screwed down; after which the bearers placed it upon a bier, and set out. I accompanied the cortège only to the end of the street. Here the driver broke into a trot, and the old man started to run behind the hearse—sobbing loudly, but with the motion of his running ever and anon causing the sobs to quaver and become broken off. Next he lost his hat, the poor old fellow, yet would not stop to pick it up, even though the rain was beating upon his head, and a wind was rising and the sleet kept stinging and lashing his face. It seemed as though he were impervious to the cruel elements as he ran from one side of the hearse to the other—the skirts of his old greatcoat flapping about him like a pair of wings. From every pocket of the garment protruded books, while in his hand he carried a specially large volume, which he hugged closely to his breast. The passers-by uncovered their heads and crossed themselves as the cortège passed, and some of them, having done so, remained staring in amazement at the poor old man. Every now and then a book would slip from one of his pockets and fall into the mud; whereupon somebody, stopping him, would direct his attention to his loss, and he would stop, pick up the book, and again set off in pursuit of the hearse. At the corner of the street he was joined by a ragged old woman; until at length the hearse turned a corner, and became hidden from my eyes. Then I went home, and threw myself, in a transport of grief, upon my mother’s breast—clasping her in my arms, kissing her amid a storm of sobs and tears, and clinging to her form as though in my embraces I were holding my last friend on earth, that I might preserve her from death. Yet already death was standing over her...."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/b2c1013d-095e-4cf1-bd12-c0edf902b8c0",
@@ -286,8 +280,7 @@
         "BARBARA ALEXIEVNA."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/eefa0836-4fa7-4d28-be7e-3707544f0258",
@@ -302,8 +295,7 @@
         "MAKAR DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/08361570-9792-4eaa-b58a-4c15b21be121",
@@ -316,8 +308,7 @@
         "Also, I have told you what Anna Thedorovna is now intending. She accuses me of ingratitude, and denies the accusations made against herself with regard to Monsieur Bwikov. Also, she keeps sending for me, and telling me that I have taken to evil courses, but that if I will return to her, she will smooth over matters with Bwikov, and force him to confess his fault. Also, she says that he desires to give me a dowry. Away with them all! I am quite happy here with you and good Thedora, whose devotion to me reminds me of my old nurse, long since dead. Distant kinsman though you may be, I pray you always to defend my honour. Other people I do not wish to know, and would gladly forget if I could.... What are they wanting with me now? Thedora declares it all to be a trick, and says that in time they will leave me alone. God grant it be so!"
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/bab0022c-e706-4dfc-a748-ac238ded41d8",
@@ -329,8 +320,7 @@
         "MAKAR DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/e5f84a37-059a-4a00-8dd2-b853f00da1d9",
@@ -342,8 +332,7 @@
         "MAKAR DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/3a554773-c898-4c47-bbe5-d95933118268",
@@ -354,8 +343,7 @@
         "MY BELOVED MAKAR ALEXIEVITCH—I return you your book. In my opinion it is a worthless one, and I would rather not have it in my possession. Why do you save up your money to buy such trash? Except in jest, do such books really please you? However, you have now promised to send me something else to read. I will share the cost of it. Now, farewell until we meet again. I have nothing more to say."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/20d34ffe-9976-4988-8999-667a9fb0b274",
@@ -393,8 +381,7 @@
         "MAKAR DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/36b3e3d6-5397-4330-85af-cd249d1cb74d",
@@ -406,8 +393,7 @@
         "Also, Thedora has brought me a book—“The Stories of Bielkin”—which I will forward you, if you would care to read it. Only, do not soil it, nor yet retain it, for it does not belong to me. It is by Pushkin. Two years ago I read these stories with my mother, and it would hurt me to read them again. If you yourself have any books, pray let me have them—so long as they have not been obtained from Rataziaev. Probably he will be giving you one of his own works when he has had one printed. How is it that his compositions please you so much, Makar Alexievitch? I think them SUCH rubbish! —Now goodbye. How I have been chattering on! When feeling sad, I always like to talk of something, for it acts upon me like medicine—I begin to feel easier as soon as I have uttered what is preying upon my heart. Good bye, good-bye, my friend—Your own"
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/154b935e-6f96-4f8e-adea-b8b756d0fd9b",
@@ -424,8 +410,7 @@
         "MY DEAR MAKAR ALEXIEVITCH—No, no, my friend, I must not go on living near you. I have been thinking the matter over, and come to the conclusion that I should be doing very wrong to refuse so good a post. I should at least have an assured crust of bread; I might at least set to work to earn my employers’ favour, and even try to change my character if required to do so. Of course it is a sad and sorry thing to have to live among strangers, and to be forced to seek their patronage, and to conceal and constrain one’s own personality—but God will help me. I must not remain forever a recluse, for similar chances have come my way before. I remember how, when a little girl at school, I used to go home on Sundays and spend the time in frisking and dancing about. Sometimes my mother would chide me for so doing, but I did not care, for my heart was too joyous, and my spirits too buoyant, for that. Yet as the evening of Sunday came on, a sadness as of death would overtake me, for at nine o’clock I had to return to school, where everything was cold and strange and severe—where the governesses, on Mondays, lost their tempers, and nipped my ears, and made me cry. On such occasions I would retire to a corner and weep alone; concealing my tears lest I should be called lazy. Yet it was not because I had to study that I used to weep, and in time I grew more used to things, and, after my schooldays were over, shed tears only when I was parting with friends... It is not right for me to live in dependence upon you. The thought tortures me. I tell you this frankly, for the reason that frankness with you has become a habit. Cannot I see that daily, at earliest dawn, Thedora rises to do washing and scrubbing, and remains working at it until late at night, even though her poor old bones must be aching for want of rest? Cannot I also see that YOU are ruining yourself for me, and hoarding your last kopeck that you may spend it on my behalf? You ought not so to act, my friend, even though you write that you would rather sell your all than let me want for anything. I believe in you, my friend—I entirely believe in your good heart; but, you say that to me now (when, perhaps, you have received some unexpected sum or gratuity) and there is still the future to be thought of. You yourself know that I am always ailing—that I cannot work as you do, glad though I should be of any work if I could get it; so what else is there for me to do? To sit and repine as I watch you and Thedora? But how would that be of any use to you? AM I necessary to you, comrade of mine? HAVE I ever done you any good? Though I am bound to you with my whole soul, and love you dearly and strongly and wholeheartedly, a bitter fate has ordained that that love should be all that I have to give—that I should be unable, by creating for you subsistence, to repay you for all your kindness. Do not, therefore, detain me longer, but think the matter out, and give me your opinion on it. In expectation of which I remain your sweetheart,"
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/474c2663-fb38-46a3-8cef-cd206572adf9",
@@ -440,8 +425,7 @@
         "P.S.—Do you know, if we go to the theatre, I think that I shall wear my new hat and black mantilla. Will that not look nice?"
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/73e251d4-d140-4ff0-b97d-f789dbb81957",
@@ -452,8 +436,7 @@
         "MY DEAREST BARBARA ALEXIEVNA—SO much for yesterday! Yes, dearest, we have both been caught playing the fool, for I have become thoroughly bitten with the actress of whom I spoke. Last night I listened to her with all my ears, although, strangely enough, it was practically my first sight of her, seeing that only once before had I been to the theatre. In those days I lived cheek by jowl with a party of five young men—a most noisy crew—and one night I accompanied them, willy-nilly, to the theatre, though I held myself decently aloof from their doings, and only assisted them for company’s sake. How those fellows talked to me of this actress! Every night when the theatre was open, the entire band of them (they always seemed to possess the requisite money) would betake themselves to that place of entertainment, where they ascended to the gallery, and clapped their hands, and repeatedly recalled the actress in question. In fact, they went simply mad over her. Even after we had returned home they would give me no rest, but would go on talking about her all night, and calling her their Glasha, and declaring themselves to be in love with “the canary-bird of their hearts.” My defenseless self, too, they would plague about the woman, for I was as young as they. What a figure I must have cut with them on the fourth tier of the gallery! Yet, I never got a sight of more than just a corner of the curtain, but had to content myself with listening. She had a fine, resounding, mellow voice like a nightingale’s, and we all of us used to clap our hands loudly, and to shout at the top of our lungs. In short, we came very near to being ejected. On the first occasion I went home walking as in a mist, with a single rouble left in my pocket, and an interval of ten clear days confronting me before next pay-day. Yet, what think you, dearest? The very next day, before going to work, I called at a French perfumer’s, and spent my whole remaining capital on some eau-de-Cologne and scented soap! Why I did so I do not know. Nor did I dine at home that day, but kept walking and walking past her windows (she lived in a fourth-storey flat on the Nevski Prospect). At length I returned to my own lodging, but only to rest a short hour before again setting off to the Nevski Prospect and resuming my vigil before her windows. For a month and a half I kept this up—dangling in her train. Sometimes I would hire cabs, and discharge them in view of her abode; until at length I had entirely ruined myself, and got into debt. Then I fell out of love with her—I grew weary of the pursuit.... You see, therefore, to what depths an actress can reduce a decent man. In those days I was young. Yes, in those days I was VERY young."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/e47e7210-0add-4749-b5a3-42883a9b7cf9",
@@ -466,8 +449,7 @@
         "Why do I do my official work at all? Why is that necessary? Will my doing of it lead anyone who reads it to give me a greatcoat, or to buy me a new pair of shoes? No, Barbara. Men only read the documents, and then require me to write more. Sometimes a man will hide himself away, and not show his face abroad, for the mere reason that, though he has done nothing to be ashamed of, he dreads the gossip and slandering which are everywhere to be encountered. If his civic and family life have to do with literature, everything will be printed and read and laughed over and discussed; until at length, he hardly dare show his face in the street at all, seeing that he will have been described by report as recognisable through his gait alone! Then, when he has amended his ways, and grown gentler (even though he still continues to be loaded with official work), he will come to be accounted a virtuous, decent citizen who has deserved well of his comrades, rendered obedience to his superiors, wished no one any evil, preserved the fear of God in his heart, and died lamented. Yet would it not be better, instead of letting the poor fellow die, to give him a cloak while yet he is ALIVE—to give it to this same Thedor Thedorovitch (that is to say, to myself)? Yes, ‘twere far better if, on hearing the tale of his subordinate’s virtues, the chief of the department were to call the deserving man into his office, and then and there to promote him, and to grant him an increase of salary. Thus vice would be punished, virtue would prevail, and the staff of that department would live in peace together. Here we have an example from everyday, commonplace life. How, therefore, could you bring yourself to send me that book, my beloved? It is a badly conceived work, Barbara, and also unreal, for the reason that in creation such a tchinovnik does not exist. No, again I protest against it, little Barbara; again I protest.—Your most humble, devoted servant,"
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/26b2e6a2-8e2e-4700-92d5-78312b9c37ef",
@@ -480,8 +462,7 @@
         "BARBARA DOBROSELOVA."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/32d1d874-dffc-4936-93a5-3cff9f51a262",
@@ -493,8 +474,7 @@
         "MAKAR DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/4921b607-4f32-41f4-bc28-6aeb44e6eec0",
@@ -508,8 +488,7 @@
         "MAKAR DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/a1cfb12c-fa2f-40b5-a8aa-bc5bd20e6d81",
@@ -521,8 +500,7 @@
         "BARBARA DOBROSELOVA."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/8185ab2a-ce84-4411-beed-49f518f11305",
@@ -536,8 +514,7 @@
         "MAKAR DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/450c686f-b2f3-41ff-a9c3-9ea61fd78fd0",
@@ -548,8 +525,7 @@
         "MY DEAREST MAKAR ALEXIEVITCH,—Do not disquiet yourself. God will grant that all shall turn out well. Thedora has obtained a quantity of work, both for me and herself, and we are setting about it with a will. Perhaps it will put us straight again. Thedora suspects my late misfortunes to be connected with Anna Thedorovna; but I do not care—I feel extraordinarily cheerful today. So you are thinking of borrowing more money? If so, may God preserve you, for you will assuredly be ruined when the time comes for repayment! You had far better come and live with us here for a little while. Yes, come and take up your abode here, and pay no attention whatever to what your landlady says. As for the rest of your enemies and ill-wishers, I am certain that it is with vain imaginings that you are vexing yourself.... In passing, let me tell you that your style differs greatly from letter to letter. Goodbye until we meet again. I await your coming with impatience—Your own,"
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/1e016ab1-d614-4f72-a7c0-5d06190c67ee",
@@ -562,8 +538,7 @@
         "MAKAR DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/a8b5a035-5e9b-465f-a26a-976ac162c221",
@@ -575,8 +550,7 @@
         "Now, therefore, Makar Alexievitch, I turn to you for help. Do not, for God’s sake, leave me in this plight. Borrow all the money that you can get, for I have not the wherewithal to leave these lodgings, yet cannot possibly remain in them any longer. At all events, this is Thedora’s advice. She and I need at least twenty-five roubles, which I will repay you out of what I earn by my work, while Thedora shall get me additional work from day to day, so that, if there be heavy interest to pay on the loan, you shall not be troubled with the extra burden. Nay, I will make over to you all that I possess if only you will continue to help me. Truly, I grieve to have to trouble you when you yourself are so hardly situated, but my hopes rest upon you, and upon you alone. Goodbye, Makar Alexievitch. Think of me, and may God speed you on your errand!"
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/c9e6aeda-7097-4f7f-b2a9-86dbff33bab1",
@@ -588,8 +562,7 @@
         "M. DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/e285ed7b-3141-436d-b506-fb36e4338258",
@@ -601,8 +574,7 @@
         "What a strange man you are, Makar Alexievitch! You take things so much to heart that you never know what it is to be happy. I read your letters attentively, and can see from them that, though you worry and disturb yourself about me, you never give a thought to yourself. Yes, every letter tells me that you have a kind heart; but I tell YOU that that heart is overly kind. So I will give you a little friendly advice, Makar Alexievitch. I am full of gratitude towards you—I am indeed full for all that you have done for me, I am most sensible of your goodness; but, to think that I should be forced to see that, in spite of your own troubles (of which I have been the involuntary cause), you live for me alone—you live but for MY joys and MY sorrows and MY affection! If you take the affairs of another person so to heart, and suffer with her to such an extent, I do not wonder that you yourself are unhappy. Today, when you came to see me after office-work was done, I felt afraid even to raise my eyes to yours, for you looked so pale and desperate, and your face had so fallen in. Yes, you were dreading to have to tell me of your failure to borrow money—you were dreading to have to grieve and alarm me; but, when you saw that I came very near to smiling, the load was, I know, lifted from your heart. So do not be despondent, do not give way, but allow more rein to your better sense. I beg and implore this of you, for it will not be long before you see things take a turn for the better. You will but spoil your life if you constantly lament another person’s sorrow. Goodbye, dear friend. I beseech you not to be over-anxious about me."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/883d4748-8f0f-4858-af16-afe3d61847a7",
@@ -617,8 +589,7 @@
         "P.S.—To conceal my sorrow I would have written this letter half jestingly; but, the faculty of jesting has not been given me. My one desire, however, is to afford you pleasure. Soon I will come and see you, dearest. Without fail I will come and see you."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/5fd2cbc2-9c4b-46c0-8363-028052ef8574",
@@ -629,8 +600,7 @@
         "O Barbara Alexievna, I am undone—we are both of us undone! Both of us are lost beyond recall! Everything is ruined—my reputation, my self-respect, all that I have in the world! And you as much as I. Never shall we retrieve what we have lost. I—I have brought you to this pass, for I have become an outcast, my darling. Everywhere I am laughed at and despised. Even my landlady has taken to abusing me. Today she overwhelmed me with shrill reproaches, and abased me to the level of a hearth-brush. And last night, when I was in Rataziaev’s rooms, one of his friends began to read a scribbled note which I had written to you, and then inadvertently pulled out of my pocket. Oh beloved, what laughter there arose at the recital! How those scoundrels mocked and derided you and myself! I walked up to them and accused Rataziaev of breaking faith. I said that he had played the traitor. But he only replied that I had been the betrayer in the case, by indulging in various amours. “You have kept them very dark though, Mr. Lovelace!” said he—and now I am known everywhere by this name of “Lovelace.” They know EVERYTHING about us, my darling, EVERYTHING—both about you and your affairs and about myself; and when today I was for sending Phaldoni to the bakeshop for something or other, he refused to go, saying that it was not his business. “But you MUST go,” said I. “I will not,” he replied. “You have not paid my mistress what you owe her, so I am not bound to run your errands.” At such an insult from a raw peasant I lost my temper, and called him a fool; to which he retorted in a similar vein. Upon this I thought that he must be drunk, and told him so; whereupon he replied: “WHAT say you that I am? Suppose you yourself go and sober up, for I know that the other day you went to visit a woman, and that you got drunk with her on two grivenniks.” To such a pass have things come! I feel ashamed to be seen alive. I am, as it were, a man proclaimed; I am in a worse plight even than a tramp who has lost his passport. How misfortunes are heaping themselves upon me! I am lost—I am lost for ever!"
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/7f4823c2-c30c-47e6-8b13-291c69301e26",
@@ -641,8 +611,7 @@
         "MY BELOVED MAKAR ALEXIEVITCH,—It is true that misfortune is following upon misfortune. I myself scarcely know what to do. Yet, no matter how you may be fairing, you must not look for help from me, for only today I burned my left hand with the iron! At one and the same moment I dropped the iron, made a mistake in my work, and burned myself! So now I can no longer work. Also, these three days past, Thedora has been ailing. My anxiety is becoming positively torturous. Nevertheless, I send you thirty kopecks—almost the last coins that I have left to me, much as I should have liked to have helped you more when you are so much in need. I feel vexed to the point of weeping. Goodbye, dear friend of mine. You will bring me much comfort if only you will come and see me today."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/00b9ad86-b5d9-4365-9057-4b677d7dc556",
@@ -653,8 +622,7 @@
         "What is the matter with you, Makar Alexievitch? Surely you cannot fear the Lord God as you ought to do? You are not only driving me to distraction but also ruining yourself with this eternal solicitude for your reputation. You are a man of honour, nobility of character, and self-respect, as everyone knows; yet, at any moment, you are ready to die with shame! Surely you should have more consideration for your grey hairs. No, the fear of God has departed from you. Thedora has told you that it is out of my power to render you anymore help. See, therefore, to what a pass you have brought me! Probably you think it is nothing to me that you should behave so badly; probably you do not realise what you have made me suffer. I dare not set foot on the staircase here, for if I do so I am stared at, and pointed at, and spoken about in the most horrible manner. Yes, it is even said of me that I am “united to a drunkard.” What a thing to hear! And whenever you are brought home drunk folk say, “They are carrying in that tchinovnik.” THAT is not the proper way to make me help you. I swear that I MUST leave this place, and go and get work as a cook or a laundress. It is impossible for me to stay here. Long ago I wrote and asked you to come and see me, yet you have not come. Truly my tears and prayers must mean NOTHING to you, Makar Alexievitch! Whence, too, did you get the money for your debauchery? For the love of God be more careful of yourself, or you will be ruined. How shameful, how abominable of you! So the landlady would not admit you last night, and you spent the night on the doorstep? Oh, I know all about it. Yet if only you could have seen my agony when I heard the news!... Come and see me, Makar Alexievitch, and we will once more be happy together. Yes, we will read together, and talk of old times, and Thedora shall tell you of her pilgrimages in former days. For God’s sake beloved, do not ruin both yourself and me. I live for you alone; it is for your sake alone that I am still here. Be your better self once more—the self which still can remain firm in the face of misfortune. Poverty is no crime; always remember that. After all, why should we despair? Our present difficulties will pass away, and God will right us. Only be brave. I send you two grivenniks for the purchase of some tobacco or anything else that you need; but, for the love of heaven, do not spend the money foolishly. Come you and see me soon; come without fail. Perhaps you may be ashamed to meet me, as you were before, but you NEED not feel like that—such shame would be misplaced. Only do bring with you sincere repentance and trust in God, who orders all things for the best."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/f8a898a7-c34b-4e54-afc1-8fac139ff758",
@@ -666,8 +634,7 @@
         "MAKAR DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/2ec003e6-04eb-4e53-86e4-8d7c86997b55",
@@ -679,8 +646,7 @@
         "MAKAR DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/ce437928-681b-4ea8-b38f-992714c40fb6",
@@ -695,8 +661,7 @@
         "Goodbye once more. I am so tired! Nor can I think why I am growing so weak—why it is that even the smallest task now wearies me? Even if work should come my way, how am I to do it? That is what worries me above all things."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/9e1f49db-f698-49d9-a566-601f31919d92",
@@ -714,8 +679,7 @@
         "MAKAR DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/de761d5b-83b4-4b4c-bb04-735cd9dcecf4",
@@ -731,8 +695,7 @@
         "MAKAR DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/e0e82903-fe17-4646-8abd-d372ab4a3d4f",
@@ -743,8 +706,7 @@
         "MY BELOVED MAKAR ALEXIEVITCH,—I am unspeakably rejoiced at your good fortune, and fully appreciate the kindness of your superior. Now, take a rest from your cares. Only do not AGAIN spend money to no advantage. Live as quietly and as frugally as possible, and from today begin always to set aside something, lest misfortune again overtake you. Do not, for God’s sake, worry yourself—Thedora and I will get on somehow. Why have you sent me so much money? I really do not need it—what I had already would have been quite sufficient. True, I shall soon be needing further funds if I am to leave these lodgings, but Thedora is hoping before long to receive repayment of an old debt. Of course, at least TWENTY roubles will have to be set aside for indispensable requirements, but the remainder shall be returned to you. Pray take care of it, Makar Alexievitch. Now, goodbye. May your life continue peacefully, and may you preserve your health and spirits. I would have written to you at greater length had I not felt so terribly weary. Yesterday I never left my bed. I am glad that you have promised to come and see me. Yes, you MUST pay me a visit."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/a582ad87-40bb-4794-bbb8-7390d3af2b77",
@@ -759,8 +721,7 @@
         "MAKAR DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/35b7a64c-5b46-4873-be90-713d309c1cf2",
@@ -771,8 +732,7 @@
         "MY DEAREST MAKAR ALEXIEVITCH,—I am in terrible distress. I feel sure that something is about to happen. The matter, my beloved friend, is that Monsieur Bwikov is again in St. Petersburg, for Thedora has met him. He was driving along in a drozhki, but, on meeting Thedora, he ordered the coachman to stop, sprang out, and inquired of her where she was living; but this she would not tell him. Next, he said with a smile that he knew quite well who was living with her (evidently Anna Thedorovna had told him); whereupon Thedora could hold out no longer, but then and there, in the street, railed at and abused him—telling him that he was an immoral man, and the cause of all my misfortunes. To this he replied that a person who did not possess a groat must surely be rather badly off; to which Thedora retorted that I could always either live by the labour of my hands or marry—that it was not so much a question of my losing posts as of my losing my happiness, the ruin of which had led almost to my death. In reply he observed that, though I was still quite young, I seemed to have lost my wits, and that my “virtue appeared to be under a cloud” (I quote his exact words). Both I and Thedora had thought that he does not know where I live; but, last night, just as I had left the house to make a few purchases in the Gostinni Dvor, he appeared at our rooms (evidently he had not wanted to find me at home), and put many questions to Thedora concerning our way of living. Then, after inspecting my work, he wound up with: “Who is this tchinovnik friend of yours?” At the moment you happened to be passing through the courtyard, so Thedora pointed you out, and the man peered at you, and laughed. Thedora next asked him to depart—telling him that I was still ill from grief, and that it would give me great pain to see him there; to which, after a pause, he replied that he had come because he had had nothing better to do. Also, he was for giving Thedora twenty-five roubles, but, of course, she declined them. What does it all mean? Why has he paid this visit? I cannot understand his getting to know about me. I am lost in conjecture. Thedora, however, says that Aksinia, her sister-in-law (who sometimes comes to see her), is acquainted with a laundress named Nastasia, and that this woman has a cousin in the position of watchman to a department of which a certain friend of Anna Thedorovna’s nephew forms one of the staff. Can it be, therefore, that an intrigue has been hatched through THIS channel? But Thedora may be entirely mistaken. We hardly know what to think. What if he should come again? The very thought terrifies me. When Thedora told me of this last night such terror seized upon me that I almost swooned away. What can the man be wanting? At all events, I refuse to know such people. What have they to do with my wretched self? Ah, how I am haunted with anxiety, for every moment I keep thinking that Bwikov is at hand! WHAT will become of me? WHAT MORE has fate in store for me? For Christ’s sake come and see me, Makar Alexievitch! For Christ’s sake come and see me soon!"
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/a2bd5e80-2862-4aca-8440-d522f8f213b6",
@@ -784,8 +744,7 @@
         "MAKAR DIEVUSHKIN."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/f83adb0f-24ca-40ef-9ad8-3758c14bd0d8",
@@ -821,8 +780,7 @@
         "Ah, dearest, my pet, my own darling!..."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     },
     {
       "id": "chapter/e0033260-5e16-4ae6-8ef7-ba1d878c2a06",
@@ -880,8 +838,7 @@
         "This website includes information about Project Gutenberg, including how to make donations to the Project Gutenberg Literary Archive Foundation, how to help produce our new eBooks, and how to subscribe to our email newsletter to hear about new eBooks."
       ],
       "summary": null,
-      "summarized_at": null,
-      "summarized_to_paragraph": null
+      "summarized_at": null
     }
   ]
 }

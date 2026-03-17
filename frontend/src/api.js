@@ -38,11 +38,11 @@ export const api = {
   deleteAnnotation: (bookId, annId) =>
     fetch(`/api/books/${bookId}/annotations/${annId}`, { method: 'DELETE' }),
 
-  createConversation: (bookId, data) =>
+  createConversation: (bookId, { chapter_id, start, end, selected_text, title }) =>
     fetch(`/api/books/${bookId}/conversations`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ chapter_id, start, end, selected_text, title }),
     }).then((r) => r.json()),
 
   getConversation: (bookId, annId) =>

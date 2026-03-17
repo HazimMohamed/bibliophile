@@ -42,24 +42,29 @@ class HighlightCreateRequest(BaseModel):
 
 class NoteCreateRequest(BaseModel):
     chapter_id: str
-    position: TextIndex
+    start: TextIndex
+    end: TextIndex
+    selected_text: str
     content: str
 
 
 class ConversationCreateRequest(BaseModel):
     chapter_id: str
-    position: TextIndex
-    selected_text: str | None = None
+    start: TextIndex
+    end: TextIndex
+    selected_text: str
     title: str | None = None
 
 
 class ConversationResponse(BaseModel):
     id: str
+    type: str
     book_id: str
     chapter_id: str
-    position: TextIndex
+    start: TextIndex
+    end: TextIndex
+    selected_text: str
     title: str | None
-    selected_text: str | None
     created_at: str
     messages: list[Message]
 

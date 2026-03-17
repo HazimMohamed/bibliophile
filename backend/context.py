@@ -5,8 +5,8 @@ SONNET_MODEL = os.getenv("SONNET_MODEL", "claude-sonnet-4-6")
 
 
 def assemble_context(book, conversation, is_opening=False):
-    ch_idx = conversation.position.chapter_index
-    para_idx = conversation.position.paragraph_index
+    ch_idx = conversation.start.chapter_index
+    para_idx = conversation.start.paragraph_index
     ch = book.chapters[ch_idx]
 
     prev_summaries = [

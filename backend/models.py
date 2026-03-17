@@ -46,23 +46,26 @@ class AnnotationBase(BaseModel):
     created_at: str
 
 
-class HighlightAnnotation(AnnotationBase):
-    type: Literal["highlight"]
+class RangedAnnotation(AnnotationBase):
+    """Base for annotations anchored to a text range (start → end + selected_text)."""
     start: TextIndex = Field(default_factory=lambda: TextIndex(chapter_index=0, paragraph_index=0, offset=0))
     end: TextIndex = Field(default_factory=lambda: TextIndex(chapter_index=0, paragraph_index=0, offset=0))
-    selected_text: str
+    selected_text: str = ""
+
+
+class HighlightAnnotation(RangedAnnotation):
+    type: Literal["highlight"]
     content: str | None = None
 
 
-class NoteAnnotation(AnnotationBase):
+class NoteAnnotation(RangedAnnotation):
     type: Literal["note"]
     content: str
 
 
-class ConversationAnnotation(AnnotationBase):
+class ConversationAnnotation(RangedAnnotation):
     type: Literal["conversation"]
     title: str | None = None
-    selected_text: str | None = None
     messages: list[Message] = []
 
 

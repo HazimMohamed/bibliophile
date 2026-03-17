@@ -7,7 +7,8 @@ venv/
 .env
 
 # Data (books and annotations are local runtime data)
-reader/backend/data/
+data/
+test-books/
 
 # Node
 node_modules/

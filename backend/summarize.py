@@ -18,8 +18,6 @@ load_dotenv()
 _in_flight: set[tuple[str, int]] = set()
 
 _HAIKU_MODEL = os.getenv("HAIKU_MODEL", "claude-haiku-4-5-20251001")
-N_THRESHOLD = int(os.getenv("N_VERBATIM_PARAGRAPHS", "15"))
-PARTIAL_INTERVAL = 20
 
 _SYSTEM_PROMPT = """\
 You are an AI reader summarizing your own memory of what you just read.
@@ -149,7 +147,4 @@ async def _do_summarize(
     book = await store.get_book(book_id)
     book.chapters[chapter_index].summary = summary
     book.chapters[chapter_index].summarized_at = now
-    book.chapters[chapter_index].summarized_to_paragraph = (
-        up_to_paragraph if up_to_paragraph is not None else len(ch.paragraphs) - 1
-    )
     await store.save_book(book)

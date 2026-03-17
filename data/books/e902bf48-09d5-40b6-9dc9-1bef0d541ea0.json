@@ -4,8 +4,12 @@
   "author": "Fyodor Dostoyevsky",
   "epub_path": "data/books/e902bf48-09d5-40b6-9dc9-1bef0d541ea0.epub",
   "cover_base64": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzJhMWYxYSIvPjxyZWN0IHg9IjEwIiB5PSIxMCIgd2lkdGg9IjE4MCIgaGVpZ2h0PSIyODAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Q5Nzc1NyIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuNCIvPjxsaW5lIHgxPSI0MCIgeTE9IjU0IiB4Mj0iMTYwIiB5Mj0iNTQiIHN0cm9rZT0iI2Q5Nzc1NyIgc3Ryb2tlLXdpZHRoPSIxIi8+PHRleHQgeD0iMTAwIiB5PSI5NCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMjEiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjZjBlOGUwIiBsZXR0ZXItc3BhY2luZz0iMiI+VEhFPC90ZXh0Pjx0ZXh0IHg9IjEwMCIgeT0iMTI0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSIyMSIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNmMGU4ZTAiIGxldHRlci1zcGFjaW5nPSIyIj5CUk9USEVSUzwvdGV4dD48dGV4dCB4PSIxMDAiIHk9IjE1NiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMjEiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSIjZjBlOGUwIiBsZXR0ZXItc3BhY2luZz0iMiI+S0FSQU1BWk9WPC90ZXh0PjxsaW5lIHgxPSI0MCIgeTE9IjE5NCIgeDI9IjE2MCIgeTI9IjE5NCIgc3Ryb2tlPSIjZDk3NzU3IiBzdHJva2Utd2lkdGg9IjEiLz48dGV4dCB4PSIxMDAiIHk9IjIyNCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsc2VyaWYiIGZvbnQtc2l6ZT0iMTEiIGZpbGw9IiNmMGU4ZTAiIG9wYWNpdHk9IjAuNjUiIGxldHRlci1zcGFjaW5nPSIxIj5GeW9kb3IgRG9zdG95ZXZza3k8L3RleHQ+PC9zdmc+",
-  "current_chapter_index": 9,
-  "semantic_paragraph_index": 2,
+  "cover_source": null,
+  "reading_position": {
+    "chapter_index": 2,
+    "paragraph_index": 3,
+    "offset": 0
+  },
   "chapters": [
     {
       "id": "chapter/248531aa-c999-4655-ac4d-a34a2b0e5d38",
@@ -20,8 +24,8 @@
         "Language: English",
         "Other information and formats: www.gutenberg.org/ebooks/28054"
       ],
-      "summary": null,
-      "summarized_at": null
+      "summary": "# Memory of Chapter 1: \"Contents\"\n\nThis chapter is a table of contents for *The Brothers Karamazov*. It lists the structure of the entire novel, organized into parts and books with chapter titles.\n\nFrom this listing, I can see the novel will involve:\n- Multiple brothers (the title itself promises this)\n- A character named Raskolnikov (though I'm uncertain of context)\n- References to a monastery, a elder, confession, and spiritual themes\n- A trial (suggesting legal drama or judgment)\n- A Grand Inquisitor (a mysterious title that suggests philosophical or religious content)\n- Various domestic and social situations\n\nThe chapter titles hint at psychological depth, family conflict, and possibly questions of faith and morality, but I cannot yet know how these elements will unfold or connect. This is purely structural—a map of the territory ahead, not the territory itself.\n\nI'm entering the novel with awareness that it will be lengthy, complex, and likely concerned with philosophical and spiritual questions alongside family drama. The presence of a monastery and an \"elder\" suggests Orthodox Christian contexts will be important.\n\nThat is all I know from this chapter: the shape of what's coming, not its substance.",
+      "summarized_at": "2026-03-16T19:20:50.749036Z"
     },
     {
       "id": "chapter/b8c1aebb-7d28-4437-95bc-a5df83de2e6f",
@@ -31,8 +35,8 @@
       "paragraphs": [
         "Book I. The History Of A Family"
       ],
-      "summary": null,
-      "summarized_at": null
+      "summary": "I notice you've asked me to summarize Chapter 2 of \"Book I. The History Of A Family,\" but you haven't actually provided the chapter text itself. \n\nThe instruction set says \"This is a complete chapter,\" but there's no text between the label and my response to work from. I only see the chapter heading.\n\nCould you please paste the actual chapter content? Once you do, I'll read through it carefully and give you a faithful summary of what happened, who appeared, what the atmosphere was like, and what details struck me as potentially significant—written as my own memory of experiencing that text.",
+      "summarized_at": "2026-03-16T19:20:50.596454Z"
     },
     {
       "id": "chapter/cf6681a7-1074-4481-b5aa-68aa8ded018b",

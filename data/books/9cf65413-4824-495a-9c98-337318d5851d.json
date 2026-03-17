@@ -4,8 +4,11 @@
   "author": "Fyodor Dostoyevsky",
   "epub_path": "data/books/9cf65413-4824-495a-9c98-337318d5851d.epub",
   "cover_base64": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzFhMjUyMCIvPjxyZWN0IHg9IjEwIiB5PSIxMCIgd2lkdGg9IjE4MCIgaGVpZ2h0PSIyODAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzc4OGM1ZCIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuNCIvPjxsaW5lIHgxPSI0MCIgeTE9IjcyIiB4Mj0iMTYwIiB5Mj0iNzIiIHN0cm9rZT0iIzc4OGM1ZCIgc3Ryb2tlLXdpZHRoPSIxIi8+PHRleHQgeD0iMTAwIiB5PSIxMTIiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2UwZWNlMCIgbGV0dGVyLXNwYWNpbmc9IjEuNSI+Q1JJTUUgQU5EPC90ZXh0Pjx0ZXh0IHg9IjEwMCIgeT0iMTQwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSIxOCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNlMGVjZTAiIGxldHRlci1zcGFjaW5nPSIxLjUiPlBVTklTSE1FTlQ8L3RleHQ+PGxpbmUgeDE9IjQwIiB5MT0iMTc2IiB4Mj0iMTYwIiB5Mj0iMTc2IiBzdHJva2U9IiM3ODhjNWQiIHN0cm9rZS13aWR0aD0iMSIvPjx0ZXh0IHg9IjEwMCIgeT0iMjA2IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSIxMSIgZmlsbD0iI2UwZWNlMCIgb3BhY2l0eT0iMC42NSIgbGV0dGVyLXNwYWNpbmc9IjEiPkZ5b2RvciBEb3N0b3lldnNreTwvdGV4dD48L3N2Zz4=",
-  "current_chapter_index": 0,
-  "semantic_paragraph_index": 0,
+  "reading_position": {
+    "chapter_index": 6,
+    "paragraph_index": 1,
+    "offset": 0
+  },
   "chapters": [
     {
       "id": "chapter/706ba562-912e-43c0-9c6b-acc24f589cf8",
@@ -49,8 +52,8 @@
         "CHAPTER VII",
         "CHAPTER VIII"
       ],
-      "summary": null,
-      "summarized_at": null
+      "summary": "# Memory of Chapter 1: \"Translated By Constance Garnett\"\n\nI have just read what appears to be a title page and table of contents for *Crime and Punishment* by Fyodor Dostoyevsky, translated by Constance Garnett. This is not a narrative chapter with plot, characters, or story.\n\nThe text provided consists of:\n- Publication metadata (release date March 28, 2006 as an eBook, last updated January 10, 2026)\n- Language information (English translation)\n- Credits to the people who digitized the text (John Bickers, Dagny and David Widger)\n- A reference to a \"Translator's Preface\" \n- A listing of chapter numbers (II, III, IV, VI, VII repeated in various groupings—notably, there is no Chapter I or V listed, which is unusual)\n\nThe heading \"Translated By Constance Garnett\" appears to be what frames this section as \"Chapter 1,\" though it is really front matter.\n\n**What I notice:** I have not yet encountered the actual story. I don't know what the novel contains, who its characters are, or what happens. I'm aware only that this is a famous work by Dostoyevsky, and I'm about to begin reading it. The chapter numbering is odd—the absence of Chapter I and V may be a scanning error, or it may reflect the original text structure.\n\nI am ready to begin the actual narrative.",
+      "summarized_at": "2026-03-16T19:00:22.545739Z"
     },
     {
       "id": "chapter/dbcf0a69-7a66-4483-973a-2d3fe37684d9",

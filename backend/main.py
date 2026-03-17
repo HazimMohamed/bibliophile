@@ -176,9 +176,12 @@ async def create_note(book_id: str, req: NoteCreateRequest):
         id=f"note/{uuid.uuid4()}",
         book_id=book_id,
         chapter_id=req.chapter_id,
-        position=req.position,
+        position=req.start,
         created_at=_now(),
         type="note",
+        start=req.start,
+        end=req.end,
+        selected_text=req.selected_text,
         content=req.content,
     )
     await store.save_annotation(book_id, ann)

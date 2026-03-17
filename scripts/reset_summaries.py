@@ -34,7 +34,6 @@ async def reset(book_id: str | None = None) -> None:
             if ch.summary is not None:
                 ch.summary = None
                 ch.summarized_at = None
-                ch.summarized_to_paragraph = None
                 cleared += 1
 
         await store.save_book(book)

@@ -909,6 +909,8 @@ These are acknowledged bugs and architectural gaps deferred to future versions. 
 
 **Naive mode leakage** — the model's constraint to context-only is enforced by prompt discipline, not architecture. The model may occasionally surface knowledge of the text beyond the current reading position. Fix: future versions can experiment with prompt hardening techniques and measure leakage rates.
 
+**Selection opens nearby highlight panel** — after finishing a text selection, the annotation panel for a nearby (unrelated) highlight sometimes opens as if clicked. Root cause: the `onClick` handler on `<p data-paragraph>` fires after `mouseup`, and the paragraph's annotation map entry includes a nearby highlight. No fix planned for v0.1.
+
 ---
 
 ## Nice To Have (NTH)

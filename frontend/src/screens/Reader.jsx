@@ -235,6 +235,14 @@ export default function Reader({ bookId }) {
     return () => window.removeEventListener('mouseup', onMouseUp);
   }, []);
 
+  // Close annotation detail panel while scrolling so it doesn't float detached from text.
+  useEffect(() => {
+    if (!activePanel) return;
+    const onScroll = () => setActivePanel(null);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [activePanel]);
+
   // Hide selection toolbar while scrolling so it never lags behind the text.
   useEffect(() => {
     if (!selectionInfo) return;
@@ -303,6 +311,26 @@ export default function Reader({ bookId }) {
       setAllAnnotations((prev) => prev.filter((a) => a.id !== annId));
     } catch (err) { console.error(err); }
   }, [bookId]);
+
+  const applyConversationUpdate = useCallback((updatedConversation) => {
+    if (!updatedConversation?.id) return;
+    setActiveConversation((prev) => (prev?.id === updatedConversation.id ? updatedConversation : prev));
+    setAllAnnotations((prev) =>
+      prev.map((ann) => (ann.id === updatedConversation.id ? { ...ann, ...updatedConversation } : ann))
+    );
+  }, []);
+
+  const closeConversation = useCallback(async () => {
+    const conv = activeConversation;
+    setActiveConversation(null);
+    if (!conv?.id) return;
+    try {
+      const fresh = await api.getConversation(bookId, conv.id);
+      applyConversationUpdate(fresh);
+    } catch (err) {
+      console.error(err);
+    }
+  }, [activeConversation, bookId, applyConversationUpdate]);
 
   // ── Chapter navigation ───────────────────────────────────
 
@@ -401,6 +429,10 @@ export default function Reader({ bookId }) {
           annotations={activePanel.annotations}
           rect={activePanel.rect}
           onDelete={handleDelete}
+          onResumeConversation={(ann) => {
+            setActivePanel(null);
+            setActiveConversation(ann);
+          }}
           onClose={() => setActivePanel(null)}
         />
       )}
@@ -439,10 +471,15 @@ export default function Reader({ bookId }) {
                 onClick={anns?.length ? (e) => {
                   const sel = window.getSelection();
                   if (sel && !sel.isCollapsed && sel.toString().trim()) return; // user just selected text
-                  if (!e.target.closest('mark.inline-highlight')) return; // must click the highlight itself
+                  const markEl = e.target.closest('mark.inline-highlight');
+                  if (!markEl) return; // must click the highlighted span itself
+                  const annId = markEl.dataset.annId;
+                  if (!annId) return;
+                  const clickedAnn = anns.find((ann) => ann.id === annId);
+                  if (!clickedAnn) return;
                   e.stopPropagation();
                   dismissSelection();
-                  setActivePanel({ annotations: anns, rect: e.currentTarget.getBoundingClientRect() });
+                  setActivePanel({ annotations: [clickedAnn], rect: markEl.getBoundingClientRect() });
                 } : undefined}
               >
                 {inlineAnnotations.length > 0 ? renderWithHighlights(text, inlineAnnotations, i) : text}
@@ -477,7 +514,8 @@ export default function Reader({ bookId }) {
         <ChatPanel
           bookId={bookId}
           conversation={activeConversation}
-          onClose={() => setActiveConversation(null)}
+          onConversationUpdate={applyConversationUpdate}
+          onClose={closeConversation}
         />
       )}
     </div>

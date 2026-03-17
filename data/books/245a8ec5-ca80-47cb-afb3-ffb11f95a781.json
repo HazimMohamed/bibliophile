@@ -4,8 +4,11 @@
   "author": "Fyodor Dostoyevsky",
   "epub_path": "data/books/245a8ec5-ca80-47cb-afb3-ffb11f95a781.epub",
   "cover_base64": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMDAgMzAwIj48cmVjdCB3aWR0aD0iMjAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzIyMWEyOCIvPjxyZWN0IHg9IjEwIiB5PSIxMCIgd2lkdGg9IjE4MCIgaGVpZ2h0PSIyODAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzliN2FiOCIgc3Ryb2tlLXdpZHRoPSIwLjUiIG9wYWNpdHk9IjAuNCIvPjxsaW5lIHgxPSI0MCIgeTE9Ijc3IiB4Mj0iMTYwIiB5Mj0iNzciIHN0cm9rZT0iIzliN2FiOCIgc3Ryb2tlLXdpZHRoPSIxIi8+PHRleHQgeD0iMTAwIiB5PSIxMTciIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2VjZTBmMCIgbGV0dGVyLXNwYWNpbmc9IjEiPk5PVEVTIEZST00gVEhFPC90ZXh0Pjx0ZXh0IHg9IjEwMCIgeT0iMTQwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iR2VvcmdpYSxzZXJpZiIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNlY2UwZjAiIGxldHRlci1zcGFjaW5nPSIxIj5VTkRFUkdST1VORDwvdGV4dD48bGluZSB4MT0iNDAiIHkxPSIxNzEiIHgyPSIxNjAiIHkyPSIxNzEiIHN0cm9rZT0iIzliN2FiOCIgc3Ryb2tlLXdpZHRoPSIxIi8+PHRleHQgeD0iMTAwIiB5PSIyMDEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJHZW9yZ2lhLHNlcmlmIiBmb250LXNpemU9IjExIiBmaWxsPSIjZWNlMGYwIiBvcGFjaXR5PSIwLjY1IiBsZXR0ZXItc3BhY2luZz0iMSI+RnlvZG9yIERvc3RveWV2c2t5PC90ZXh0Pjwvc3ZnPg==",
-  "current_chapter_index": 10,
-  "semantic_paragraph_index": 0,
+  "reading_position": {
+    "chapter_index": 0,
+    "paragraph_index": 3,
+    "offset": 0
+  },
   "chapters": [
     {
       "id": "chapter/9fd2b5b7-123a-464f-a641-deaad0115ca4",

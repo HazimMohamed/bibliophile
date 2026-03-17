@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { api } from '../api.js';
 
-export default function ChatPanel({ bookId, conversation, onClose }) {
+export default function ChatPanel({ bookId, conversation, onClose, onConversationUpdate }) {
   const [messages, setMessages] = useState(conversation.messages ?? []);
   const [streamingText, setStreamingText] = useState('');
   const [streaming, setStreaming] = useState(false);
@@ -12,11 +12,24 @@ export default function ChatPanel({ bookId, conversation, onClose }) {
   const openingFired = useRef(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  useEffect(() => {
+    setMessages(conversation.messages ?? []);
+    setStreamingText('');
+    setStreaming(false);
+    setInput('');
+    setErrorMsg('');
+    openingFired.current = false;
+  }, [conversation.id]);
+
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
   useEffect(() => { scrollToBottom(); }, [messages, streamingText]);
+
+  const publishConversationUpdate = useCallback((nextMessages) => {
+    onConversationUpdate?.({ ...conversation, messages: nextMessages });
+  }, [conversation, onConversationUpdate]);
 
   const doStream = useCallback((content) => {
     setStreaming(true);
@@ -29,7 +42,11 @@ export default function ChatPanel({ bookId, conversation, onClose }) {
       (token) => setStreamingText((t) => t + token),
       () => {
         setStreamingText((text) => {
-          setMessages((prev) => [...prev, { role: 'assistant', content: text }]);
+          setMessages((prev) => {
+            const next = [...prev, { role: 'assistant', content: text }];
+            publishConversationUpdate(next);
+            return next;
+          });
           return '';
         });
         setStreaming(false);
@@ -41,7 +58,7 @@ export default function ChatPanel({ bookId, conversation, onClose }) {
         setErrorMsg('Something went wrong. Try again.');
       }
     );
-  }, [bookId, conversation.id]);
+  }, [bookId, conversation.id, publishConversationUpdate]);
 
   // Fire opening message if no messages yet — guard against Strict Mode double-invoke
   useEffect(() => {
@@ -55,9 +72,13 @@ export default function ChatPanel({ bookId, conversation, onClose }) {
     const content = input.trim();
     if (!content || streaming) return;
     setInput('');
-    setMessages((prev) => [...prev, { role: 'user', content }]);
+    setMessages((prev) => {
+      const next = [...prev, { role: 'user', content }];
+      publishConversationUpdate(next);
+      return next;
+    });
     doStream(content);
-  }, [input, streaming, doStream]);
+  }, [input, streaming, doStream, publishConversationUpdate]);
 
   const handleKeyDown = useCallback((e) => {
     if (e.key === 'Enter' && !e.shiftKey) {

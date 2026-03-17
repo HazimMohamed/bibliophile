@@ -57,8 +57,7 @@ def _book_to_summary(book: Book, annotation_count: int) -> BookSummaryResponse:
         title=book.title,
         author=book.author,
         cover_base64=book.cover_base64,
-        current_chapter_index=book.current_chapter_index,
-        semantic_paragraph_index=book.semantic_paragraph_index,
+        reading_position=book.reading_position,
         chapter_count=len(book.chapters),
         annotation_count=annotation_count,
     )

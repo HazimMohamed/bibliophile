@@ -12,16 +12,16 @@ function getInitials(title) {
 }
 
 function BookTile({ book, onClick }) {
-  const { title, author, cover_base64, current_chapter_index, chapter_count } = book;
+  const { title, author, cover_base64, reading_position, chapter_count } = book;
+  const chapterIndex = reading_position?.chapter_index ?? 0;
 
   const showProgress =
-    typeof current_chapter_index === 'number' &&
     typeof chapter_count === 'number' &&
     chapter_count > 0 &&
-    current_chapter_index > 0;
+    chapterIndex > 0;
 
   const progressPct = showProgress
-    ? Math.min(100, (current_chapter_index / (chapter_count - 1)) * 100)
+    ? Math.min(100, (chapterIndex / (chapter_count - 1)) * 100)
     : 0;
 
   return (
