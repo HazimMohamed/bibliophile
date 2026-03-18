@@ -87,7 +87,7 @@ async def get_book(book_id: str):
     return await store.get_book_detail(book_id)
 
 
-@app.post("/api/books/{book_id}/cover/regenerate")
+@app.post("/books/{book_id}/cover/regenerate")
 async def regenerate_cover(book_id: str, generator: str = "svg"):
     book = await store.get_book(book_id)
     cover = await default_cover_service.generate(book.title, book.author)

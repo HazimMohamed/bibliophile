@@ -1,0 +1,25 @@
+[Unit]
+Description=Bibliophile backend (FastAPI/uvicorn)
+After=network.target
+
+[Service]
+Type=simple
+User=bibliophile
+Group=bibliophile
+WorkingDirectory=/opt/bibliophile
+EnvironmentFile=/opt/bibliophile/.env
+ExecStart=/opt/bibliophile/.venv/bin/uvicorn \
+    backend.main:app \
+    --host 127.0.0.1 \
+    --port 8000 \
+    --workers 1 \
+    --log-level info
+Restart=on-failure
+RestartSec=5s
+StartLimitIntervalSec=60s
+StartLimitBurst=3
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
