@@ -15,6 +15,14 @@ node_modules/
 dist/
 .vite/
 
+# Android / Gradle build outputs
+frontend/android/.gradle/
+frontend/android/build/
+frontend/android/app/build/
+frontend/android/local.properties
+*.apk
+*.aab
+
 # OS
 .DS_Store
 Thumbs.db

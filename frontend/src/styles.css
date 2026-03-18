@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600&family=Inter:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,500;7..72,600&family=Lora:wght@400;500;600&family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap');
+
 :root {
   --color-bg: #f8f3ea;
   --color-surface: #ece3d2;
@@ -466,6 +468,25 @@ body {
   width: 80px;
 }
 
+.reader-settings-btn {
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.reader-settings-btn:hover {
+  color: var(--color-text);
+  background: var(--color-hover-soft);
+}
+
 .reader-footer {
   position: fixed;
   bottom: 0;
@@ -511,12 +532,12 @@ body {
 }
 
 .reader-chapter-content {
-  max-width: 680px;
+  max-width: var(--reader-content-max-width, 680px);
   margin: 0 auto;
 }
 
 .reader-chapter-title {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: var(--reader-font-family, Georgia, 'Times New Roman', serif);
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--color-text);
@@ -525,9 +546,9 @@ body {
 }
 
 .reader-paragraph {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 18px;
-  line-height: 1.8;
+  font-family: var(--reader-font-family, Georgia, 'Times New Roman', serif);
+  font-size: var(--reader-font-size, 18px);
+  line-height: var(--reader-line-height, 1.8);
   color: var(--color-text);
   margin: 0 0 1.2em;
   padding-left: 0;
@@ -691,6 +712,52 @@ body {
 
 .modal-btn.secondary:hover {
   color: var(--color-text);
+}
+
+.reader-settings-modal {
+  width: 520px;
+  max-width: calc(100vw - 28px);
+}
+
+.reader-settings-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reader-settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.reader-settings-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.reader-settings-select {
+  width: 100%;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 9px 10px;
+  outline: none;
+}
+
+.reader-settings-select:focus {
+  border-color: var(--color-focus-ring);
+}
+
+.reader-settings-range {
+  width: 100%;
+  accent-color: var(--color-primary);
 }
 
 /* ─── Annotation toolbar (selection popup) ────────────── */

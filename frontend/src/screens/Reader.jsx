@@ -5,9 +5,88 @@ import AnnotationToolbar from '../components/AnnotationToolbar.jsx';
 import AnnotationPanel from '../components/AnnotationPanel.jsx';
 import NoteModal from '../components/NoteModal.jsx';
 import ChatPanel from '../components/ChatPanel.jsx';
+import ReaderSettingsModal from '../components/ReaderSettingsModal.jsx';
 
 const SAMPLE_INTERVAL_MS = 500;
 const SAVE_DEBOUNCE_MS = 2000;
+const READER_SETTINGS_KEY = 'bibliophile.reader.settings.v1';
+
+const DEFAULT_READER_SETTINGS = {
+  fontFamily: 'serif',
+  fontSizePx: 18,
+  lineHeight: 1.8,
+  theme: 'warm',
+  contentMaxWidthPx: 680,
+};
+
+const THEME_PRESETS = {
+  warm: {
+    '--color-bg': '#f8f3ea',
+    '--color-surface': '#ece3d2',
+    '--color-surface-panel': '#f2e9da',
+    '--color-surface-modal': '#f7efe2',
+    '--color-text': '#1c1712',
+    '--color-text-muted': '#8f8577',
+    '--color-border': 'rgba(40, 30, 20, 0.12)',
+    '--color-border-soft': 'rgba(40, 30, 20, 0.08)',
+    '--color-hover-soft': 'rgba(40, 30, 20, 0.06)',
+  },
+  darkWarm: {
+    '--color-bg': '#1f1a16',
+    '--color-surface': '#2a231e',
+    '--color-surface-panel': '#241e19',
+    '--color-surface-modal': '#302822',
+    '--color-text': '#f1e6d9',
+    '--color-text-muted': '#c5b29f',
+    '--color-border': 'rgba(241, 230, 217, 0.18)',
+    '--color-border-soft': 'rgba(241, 230, 217, 0.12)',
+    '--color-hover-soft': 'rgba(241, 230, 217, 0.1)',
+  },
+  highContrast: {
+    '--color-bg': '#ffffff',
+    '--color-surface': '#f3f3f3',
+    '--color-surface-panel': '#ffffff',
+    '--color-surface-modal': '#ffffff',
+    '--color-text': '#0b0b0b',
+    '--color-text-muted': '#353535',
+    '--color-border': 'rgba(0, 0, 0, 0.24)',
+    '--color-border-soft': 'rgba(0, 0, 0, 0.16)',
+    '--color-hover-soft': 'rgba(0, 0, 0, 0.12)',
+  },
+  mist: {
+    '--color-bg': '#edf1f5',
+    '--color-surface': '#dde5ee',
+    '--color-surface-panel': '#e6edf4',
+    '--color-surface-modal': '#ecf2f8',
+    '--color-text': '#1a2530',
+    '--color-text-muted': '#617181',
+    '--color-border': 'rgba(20, 34, 48, 0.14)',
+    '--color-border-soft': 'rgba(20, 34, 48, 0.09)',
+    '--color-hover-soft': 'rgba(20, 34, 48, 0.07)',
+  },
+  nocturne: {
+    '--color-bg': '#1a1e24',
+    '--color-surface': '#232933',
+    '--color-surface-panel': '#1f252e',
+    '--color-surface-modal': '#262d37',
+    '--color-text': '#edf1f6',
+    '--color-text-muted': '#a8b5c3',
+    '--color-border': 'rgba(237, 241, 246, 0.16)',
+    '--color-border-soft': 'rgba(237, 241, 246, 0.1)',
+    '--color-hover-soft': 'rgba(237, 241, 246, 0.1)',
+  },
+};
+
+const FONT_FAMILY_MAP = {
+  serif: "Georgia, 'Times New Roman', serif",
+  literata: "'Literata', Georgia, serif",
+  lora: "'Lora', Georgia, serif",
+  merriweather: "'Merriweather', Georgia, serif",
+  sourceSerif: "'Source Serif 4', Georgia, serif",
+  crimson: "'Crimson Pro', Georgia, serif",
+  inter: "'Inter', 'Segoe UI', sans-serif",
+  sourceSans: "'Source Sans 3', 'Segoe UI', sans-serif",
+};
 
 function renderWithHighlights(text, highlights, paragraphIndex) {
   const resolved = highlights
@@ -96,6 +175,26 @@ function buildAnnotationMap(annotations, forChapter) {
   return map;
 }
 
+function loadReaderSettings() {
+  try {
+    const raw = localStorage.getItem(READER_SETTINGS_KEY);
+    if (!raw) return DEFAULT_READER_SETTINGS;
+    const parsed = JSON.parse(raw);
+    const nextTheme = parsed?.theme === 'paper'
+      ? 'highContrast'
+      : parsed?.theme === 'sepia'
+        ? 'darkWarm'
+        : parsed?.theme;
+    return {
+      ...DEFAULT_READER_SETTINGS,
+      ...(parsed && typeof parsed === 'object' ? parsed : {}),
+      theme: nextTheme ?? DEFAULT_READER_SETTINGS.theme,
+    };
+  } catch {
+    return DEFAULT_READER_SETTINGS;
+  }
+}
+
 export default function Reader({ bookId }) {
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -119,6 +218,8 @@ export default function Reader({ bookId }) {
   const [activePanel, setActivePanel] = useState(null); // { annotations, rect }
   // Active conversation for chat panel
   const [activeConversation, setActiveConversation] = useState(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [readerSettings, setReaderSettings] = useState(() => loadReaderSettings());
 
   const lastSavedChapter = useRef(0);
   const lastSavedParagraph = useRef(0);
@@ -162,6 +263,17 @@ export default function Reader({ bookId }) {
     setActivePanel(null);
     setSelectionInfo(null);
   }, [allAnnotations, chapterIndex]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        localStorage.setItem(READER_SETTINGS_KEY, JSON.stringify(readerSettings));
+      } catch {
+        // no-op: localStorage can fail in privacy modes
+      }
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [readerSettings]);
 
   // ── Scroll to saved position ─────────────────────────────
 
@@ -353,6 +465,15 @@ export default function Reader({ bookId }) {
     ? `${book.title} — Ch ${chapterIndex + 1} of ${totalChapters}`
     : 'Loading…';
 
+  const themeVars = THEME_PRESETS[readerSettings.theme] ?? THEME_PRESETS.warm;
+  const readerVars = {
+    ...themeVars,
+    '--reader-font-family': FONT_FAMILY_MAP[readerSettings.fontFamily] ?? FONT_FAMILY_MAP.serif,
+    '--reader-font-size': `${readerSettings.fontSizePx}px`,
+    '--reader-line-height': String(readerSettings.lineHeight),
+    '--reader-content-max-width': `${readerSettings.contentMaxWidthPx}px`,
+  };
+
   // ── Global dismiss on outside click ─────────────────────
 
   const handleRootClick = useCallback((e) => {
@@ -398,7 +519,7 @@ export default function Reader({ bookId }) {
   }
 
   return (
-    <div className={`reader-root${activeConversation ? ' chat-open' : ''}`} onClick={handleRootClick}>
+    <div className={`reader-root${activeConversation ? ' chat-open' : ''}`} style={readerVars} onClick={handleRootClick}>
       {outlineOpen && (
         <Outline
           chapters={chapters}
@@ -424,6 +545,15 @@ export default function Reader({ bookId }) {
         />
       )}
 
+      {settingsOpen && (
+        <ReaderSettingsModal
+          settings={readerSettings}
+          onChange={(patch) => setReaderSettings((prev) => ({ ...prev, ...patch }))}
+          onReset={() => setReaderSettings(DEFAULT_READER_SETTINGS)}
+          onClose={() => setSettingsOpen(false)}
+        />
+      )}
+
       {activePanel && (
         <AnnotationPanel
           annotations={activePanel.annotations}
@@ -446,7 +576,14 @@ export default function Reader({ bookId }) {
           ☰
         </button>
         <span className="reader-chapter-label">{chapterLabel}</span>
-        <div className="reader-header-spacer" />
+        <button
+          className="reader-settings-btn"
+          onClick={(e) => { e.stopPropagation(); setSettingsOpen(true); }}
+          aria-label="Open reader settings"
+          title="Reader settings"
+        >
+          ⚙
+        </button>
       </header>
 
       <div className="reader-scroll-area">

@@ -1,57 +1,67 @@
+function buildApiUrl(path) {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  const apiBase = (import.meta.env.VITE_API_BASE_URL || '').trim();
+  if (apiBase) {
+    const trimmedBase = apiBase.replace(/\/+$/, '');
+    return `${trimmedBase}${normalizedPath}`;
+  }
+  return `/api${normalizedPath}`;
+}
+
 export const api = {
   listBooks: () =>
-    fetch('/api/books').then((r) => r.json()),
+    fetch(buildApiUrl('/books')).then((r) => r.json()),
 
   getBook: (id) =>
-    fetch(`/api/books/${id}`).then((r) => r.json()),
+    fetch(buildApiUrl(`/books/${id}`)).then((r) => r.json()),
 
   uploadEpub: (file) => {
     const form = new FormData();
     form.append('file', file);
-    return fetch('/api/books/upload', { method: 'POST', body: form }).then((r) => r.json());
+    return fetch(buildApiUrl('/books/upload'), { method: 'POST', body: form }).then((r) => r.json());
   },
 
   updateState: (id, state) =>
-    fetch(`/api/books/${id}/state`, {
+    fetch(buildApiUrl(`/books/${id}/state`), {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(state),
     }),
 
   listAnnotations: (id) =>
-    fetch(`/api/books/${id}/annotations`).then((r) => r.json()),
+    fetch(buildApiUrl(`/books/${id}/annotations`)).then((r) => r.json()),
 
   createHighlight: (bookId, data) =>
-    fetch(`/api/books/${bookId}/annotations/highlight`, {
+    fetch(buildApiUrl(`/books/${bookId}/annotations/highlight`), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     }).then((r) => r.json()),
 
   createNote: (bookId, data) =>
-    fetch(`/api/books/${bookId}/annotations/note`, {
+    fetch(buildApiUrl(`/books/${bookId}/annotations/note`), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     }).then((r) => r.json()),
 
   deleteAnnotation: (bookId, annId) =>
-    fetch(`/api/books/${bookId}/annotations/${annId}`, { method: 'DELETE' }),
+    fetch(buildApiUrl(`/books/${bookId}/annotations/${annId}`), { method: 'DELETE' }),
 
   createConversation: (bookId, { chapter_id, start, end, selected_text, title }) =>
-    fetch(`/api/books/${bookId}/conversations`, {
+    fetch(buildApiUrl(`/books/${bookId}/conversations`), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chapter_id, start, end, selected_text, title }),
     }).then((r) => r.json()),
 
   getConversation: (bookId, annId) =>
-    fetch(`/api/books/${bookId}/conversations/${encodeURIComponent(annId)}`).then((r) => r.json()),
+    fetch(buildApiUrl(`/books/${bookId}/conversations/${encodeURIComponent(annId)}`)).then((r) => r.json()),
 
   streamMessages: async (bookId, annId, content, onToken, onDone, onError) => {
     try {
       const res = await fetch(
-        `/api/books/${bookId}/conversations/${encodeURIComponent(annId)}/messages`,
+        buildApiUrl(`/books/${bookId}/conversations/${encodeURIComponent(annId)}/messages`),
         { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content }) }
       );
       if (!res.ok) throw new Error(`HTTP ${res.status}`);

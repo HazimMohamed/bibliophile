@@ -1,16 +1,28 @@
 import React from 'react';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 
-function latestConversationPreview(messages) {
-  if (!Array.isArray(messages) || messages.length === 0) {
+function truncateAtWord(text, maxChars) {
+  const value = (text ?? '').trim();
+  if (!value) return '';
+  if (value.length <= maxChars) return value;
+
+  const slice = value.slice(0, maxChars + 1);
+  const lastSpace = slice.lastIndexOf(' ');
+  const cutIndex = lastSpace > Math.floor(maxChars * 0.6) ? lastSpace : maxChars;
+  return `${value.slice(0, cutIndex).trimEnd()}...`;
+}
+
+function conversationPreview(messages) {
+  const list = Array.isArray(messages) ? messages : [];
+  if (list.length === 0) {
     return { roleLabel: null, text: 'No messages yet.' };
   }
-  const latest = messages[messages.length - 1];
-  const roleLabel = latest?.role === 'user' ? 'You' : 'AI';
-  const raw = (latest?.content ?? '').trim();
+
+  const chosen = list.find((m) => m?.role === 'user') ?? list[0];
+  const roleLabel = chosen?.role === 'user' ? 'You' : 'AI';
+  const raw = (chosen?.content ?? '').trim();
   if (!raw) return { roleLabel, text: 'No message content.' };
-  const text = raw.length > 160 ? `${raw.slice(0, 160)}...` : raw;
-  return { roleLabel, text };
+  return { roleLabel, text: truncateAtWord(raw, 160) };
 }
 
 export default function AnnotationPanel({ annotations, rect, onDelete, onResumeConversation, onClose }) {
@@ -54,16 +66,16 @@ export default function AnnotationPanel({ annotations, rect, onDelete, onResumeC
             {annotations.map((ann) => (
               <div key={ann.id} className={`ann-item ann-item--${ann.type}`}>
                 {ann.selected_text && (
-                  <blockquote className="ann-item-quote">"{ann.selected_text}"</blockquote>
+                  <blockquote className="ann-item-quote">"{truncateAtWord(ann.selected_text, 180)}"</blockquote>
                 )}
-                {ann.content && <p className="ann-item-content">{ann.content}</p>}
+                {ann.content && <p className="ann-item-content">{truncateAtWord(ann.content, 220)}</p>}
                 {ann.type === 'conversation' && (
                   <div className="ann-conv-preview">
                     <div className="ann-conv-meta">
                       <span>{Array.isArray(ann.messages) ? ann.messages.length : 0} messages</span>
                     </div>
                     {(() => {
-                      const preview = latestConversationPreview(ann.messages);
+                      const preview = conversationPreview(ann.messages);
                       return (
                         <p className="ann-conv-snippet">
                           {preview.roleLabel && <strong>{preview.roleLabel}: </strong>}
