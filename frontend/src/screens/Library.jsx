@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { api } from '../api.js';
+import { api, getRuntimeApiBase } from '../api.js';
+import ConnectionLab from '../components/ConnectionLab.jsx';
+import { requestText } from '../transport.js';
 import UploadButton from '../components/UploadButton.jsx';
 
 function getInitials(title) {
@@ -56,6 +58,42 @@ export default function Library() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [query, setQuery] = useState('');
+  const [probeResults, setProbeResults] = useState({});
+  const [busyProbeKey, setBusyProbeKey] = useState(null);
+
+  // Keep the connection lab around for future network debugging, but hide it
+  // from normal builds unless we explicitly opt in.
+  const showConnectionLab = import.meta.env.VITE_SHOW_CONNECTION_LAB === 'true';
+  const runtimeApiBase = getRuntimeApiBase();
+  const emulatorProbeUrl = 'http://10.0.2.2:8787/ping';
+  const publicProbeUrl = 'https://httpbingo.org/get?source=bibliophile-android';
+  const apiProbeUrl = `${runtimeApiBase}/books`;
+  const probes = [
+    {
+      key: 'host',
+      tabLabel: 'Host',
+      title: 'Host bridge',
+      actionLabel: 'Test Host',
+      tone: 'host',
+      url: emulatorProbeUrl,
+    },
+    {
+      key: 'public',
+      tabLabel: 'Public',
+      title: 'Public HTTPS',
+      actionLabel: 'Test Public',
+      tone: 'public',
+      url: publicProbeUrl,
+    },
+    {
+      key: 'api',
+      tabLabel: 'API',
+      title: 'Runtime API',
+      actionLabel: 'Test API',
+      tone: 'api',
+      url: apiProbeUrl,
+    },
+  ];
 
   const loadBooks = useCallback(async () => {
     setLoading(true);
@@ -88,6 +126,34 @@ export default function Library() {
     window.location.hash = `#/reader/${id}`;
   };
 
+  const runProbe = useCallback(async (probe) => {
+    setBusyProbeKey(probe.key);
+    setProbeResults((current) => ({
+      ...current,
+      [probe.key]: `${probe.title}: probing ${probe.url}`,
+    }));
+
+    try {
+      const text = await requestText(probe.url, {
+        method: 'GET',
+        headers: { Accept: 'text/plain, application/json' },
+      });
+      const snippet = text.trim().slice(0, 160) || '(empty body)';
+      setProbeResults((current) => ({
+        ...current,
+        [probe.key]: `${probe.title}: ok ${snippet}`,
+      }));
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      setProbeResults((current) => ({
+        ...current,
+        [probe.key]: `${probe.title}: failed ${message}`,
+      }));
+    } finally {
+      setBusyProbeKey(null);
+    }
+  }, []);
+
   return (
     <div className="library-root">
       <header className="library-header">
@@ -104,6 +170,16 @@ export default function Library() {
           onChange={(e) => setQuery(e.target.value)}
           aria-label="Search books"
         />
+
+        {showConnectionLab && (
+          <ConnectionLab
+            runtimeApiBase={runtimeApiBase}
+            probes={probes}
+            probeResults={probeResults}
+            busyProbeKey={busyProbeKey}
+            onRunProbe={runProbe}
+          />
+        )}
 
         {loading && <p className="state-msg">Loading library…</p>}
 

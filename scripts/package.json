@@ -1,0 +1,9 @@
+{
+  "name": "bibliophile-scripts",
+  "private": true,
+  "scripts": {
+    "dev-proxy": "node dev-proxy.js",
+    "deploy-android": "bash ./deploy-android.sh",
+    "deploy-android:windows": "powershell -ExecutionPolicy Bypass -File ./deploy-android.ps1"
+  }
+}

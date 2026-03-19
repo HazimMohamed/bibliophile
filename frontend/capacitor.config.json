@@ -1,5 +1,10 @@
 {
   "appId": "com.bibliophile.app",
   "appName": "Bibliophile",
-  "webDir": "dist"
+  "webDir": "dist",
+  "plugins": {
+    "CapacitorHttp": {
+      "enabled": true
+    }
+  }
 }

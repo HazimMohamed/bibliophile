@@ -5,15 +5,17 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:android": "vite build --mode android",
     "preview": "vite preview",
     "cap:sync": "npx cap sync android",
     "cap:open:android": "npx cap open android",
-    "cap:build:android": "npm run build && npx cap sync android"
+    "cap:build:android": "npm run build:android && npx cap sync android"
   },
   "dependencies": {
     "@capacitor/android": "^8.2.0",
     "@capacitor/cli": "^8.2.0",
     "@capacitor/core": "^8.2.0",
+    "@capacitor/status-bar": "^8.0.1",
     "@radix-ui/react-popover": "^1.1.15",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
