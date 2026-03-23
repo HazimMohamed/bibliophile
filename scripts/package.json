@@ -4,6 +4,7 @@
   "scripts": {
     "dev-proxy": "node dev-proxy.js",
     "deploy-android": "bash ./deploy-android.sh",
-    "deploy-android:windows": "powershell -ExecutionPolicy Bypass -File ./deploy-android.ps1"
+    "deploy-android:windows": "powershell -ExecutionPolicy Bypass -File ./deploy-android.ps1",
+    "install-android-debug:windows": "powershell -ExecutionPolicy Bypass -File ./install-android-debug.ps1"
   }
 }

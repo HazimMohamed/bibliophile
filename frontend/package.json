@@ -6,6 +6,7 @@
     "dev": "vite",
     "build": "vite build",
     "build:android": "vite build --mode android",
+    "build:android-device": "vite build --mode android-device",
     "preview": "vite preview",
     "cap:sync": "npx cap sync android",
     "cap:open:android": "npx cap open android",

@@ -299,14 +299,20 @@ function Get-TargetDevice {
         return $devices[0]
     }
 
-    $emulators = $devices | Where-Object { $_ -like "emulator-*" }
-    if ($emulators.Count -ge 1) {
-        Write-WarnLine "Multiple devices detected. Picking emulator $($emulators[0])."
-        return $emulators[0]
+    Write-Host ""
+    Write-Host "    Multiple ADB devices found:" -ForegroundColor Yellow
+    for ($i = 0; $i -lt $devices.Count; $i++) {
+        Write-Host "    $($i + 1). $($devices[$i])" -ForegroundColor Gray
     }
 
-    Write-WarnLine "Multiple devices detected. Picking $($devices[0])."
-    return $devices[0]
+    while ($true) {
+        $input = (Read-Host "    Select device [1-$($devices.Count)]").Trim()
+        $index = $input -as [int]
+        if ($index -ge 1 -and $index -le $devices.Count) {
+            return $devices[$index - 1]
+        }
+        Write-WarnLine "Please enter a number between 1 and $($devices.Count)."
+    }
 }
 
 function Ensure-AdbServer {
@@ -459,15 +465,22 @@ if (-not $device) {
     $device = Start-EmulatorIfNeeded -AdbPath $adbPath -EmulatorPath $emulatorPath -PreferredAvd $AvdName
 }
 
+$IsEmulator = $device -like "emulator-*"
+if ($IsEmulator) {
+    Write-Info "Target is an emulator — will use proxy relay and android build mode."
+} else {
+    Write-Info "Target is a physical device — will hit tailnet directly and skip proxy."
+}
+
 if (-not (Test-Path $gradleBat)) {
     throw "Could not find gradlew.bat at $gradleBat"
 }
 
-if (-not (Test-Path $proxyScriptPath)) {
-    throw "Could not find dev proxy script at $proxyScriptPath"
-}
+if ($IsEmulator -and -not $SkipProxy) {
+    if (-not (Test-Path $proxyScriptPath)) {
+        throw "Could not find dev proxy script at $proxyScriptPath"
+    }
 
-if (-not $SkipProxy) {
     if (-not $ProxyTargetBase) {
         $ProxyTargetBase = Prompt-ProxyTarget
     }
@@ -490,15 +503,19 @@ Write-Info "WSL repo:    $WslRepoPath"
 Write-Info "Windows repo: $repoWindowsPath"
 Write-Info "ADB:         $adbPath"
 Write-Info "Device:      $device"
-if (-not $SkipProxy) {
+Write-Info "Target type: $(if ($IsEmulator) { 'emulator' } else { 'physical device' })"
+Write-Info "Build mode:  $buildMode"
+if ($IsEmulator -and -not $SkipProxy) {
     Write-Info "Proxy target: $ProxyTargetBase"
 }
 
 Write-Step "Building web assets in WSL"
+$buildMode = if ($IsEmulator) { "build:android" } else { "build:android-device" }
+Write-Info "Build mode: $buildMode"
 $wslNodeBin = "/home/zuzu/.nvm/versions/node/v22.20.0/bin"
 $wslNpm = "$wslNodeBin/npm"
 $wslLinuxPath = "${wslNodeBin}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-$wslCommand = "export PATH='$wslLinuxPath' && cd '$WslRepoPath/frontend' && '$wslNpm' run build:android && '$wslNpm' run cap:sync"
+$wslCommand = "export PATH='$wslLinuxPath' && cd '$WslRepoPath/frontend' && '$wslNpm' run $buildMode && '$wslNpm' run cap:sync"
 Invoke-Checked -Label "wsl.exe -d $WslDistro -- bash -lc `"$wslCommand`"" -Action {
     & wsl.exe -d $WslDistro -- bash -lc $wslCommand
 }
@@ -562,6 +579,6 @@ Write-Good "Bibliophile is launching now."
 
 Write-Host ""
 Write-Host "Deploy complete." -ForegroundColor Cyan
-if (-not $SkipProxy) {
+if ($IsEmulator -and -not $SkipProxy) {
     Write-Host "Proxy relay remains available at http://10.0.2.2:$ProxyPort/api" -ForegroundColor DarkYellow
 }

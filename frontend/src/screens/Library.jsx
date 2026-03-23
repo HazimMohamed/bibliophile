@@ -181,7 +181,7 @@ export default function Library() {
           />
         )}
 
-        {loading && <p className="state-msg">Loading library…</p>}
+        {loading && <p className="state-msg">Library is loading…</p>}
 
         {!loading && error && <p className="state-msg error">{error}</p>}
 

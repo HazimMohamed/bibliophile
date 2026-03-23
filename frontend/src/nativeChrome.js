@@ -19,8 +19,8 @@ export async function configureNativeChrome() {
   }
 
   try {
-    await StatusBar.setOverlaysWebView({ overlay: false });
+    await StatusBar.setOverlaysWebView({ overlay: true });
   } catch {
-    // Android 15+ may not support disabling overlay; CSS safe-area padding remains the fallback.
+    // Ignore — CSS safe-area-inset-top handles the clearance.
   }
 }

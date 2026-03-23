@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { api } from '../api.js';
 import Outline from '../components/Outline.jsx';
 import AnnotationToolbar from '../components/AnnotationToolbar.jsx';
@@ -9,6 +10,7 @@ import ReaderSettingsModal from '../components/ReaderSettingsModal.jsx';
 
 const SAMPLE_INTERVAL_MS = 500;
 const SAVE_DEBOUNCE_MS = 2000;
+const SELECTION_UPDATE_DELAY_MS = 30;
 const READER_SETTINGS_KEY = 'bibliophile.reader.settings.v1';
 
 const DEFAULT_READER_SETTINGS = {
@@ -121,18 +123,24 @@ function renderWithHighlights(text, highlights, paragraphIndex) {
   return parts;
 }
 
-function computeSelectionInfo() {
+function computeSelectionInfo(scopeEl) {
   const sel = window.getSelection();
-  if (!sel || sel.isCollapsed || !sel.toString().trim()) return null;
+  if (!sel || sel.rangeCount === 0 || sel.isCollapsed || !sel.toString().trim() || !scopeEl) return null;
   const range = sel.getRangeAt(0);
+  const isWithinScope = (node) => {
+    if (!node) return false;
+    const element = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
+    return Boolean(element && scopeEl.contains(element));
+  };
+  if (!isWithinScope(range.startContainer) || !isWithinScope(range.endContainer)) return null;
   const rect = range.getBoundingClientRect();
   const findPara = (n) => {
-    while (n && !(n.nodeName === 'P' && n.dataset?.paragraph !== undefined)) n = n.parentNode;
+    while (n && n !== scopeEl && !(n.nodeName === 'P' && n.dataset?.paragraph !== undefined)) n = n.parentNode;
     return n;
   };
   const startPara = findPara(range.startContainer);
   const endPara   = findPara(range.endContainer);
-  if (!startPara) return null;
+  if (!startPara || !endPara) return null;
   const measureOffset = (para, container, containerOffset) => {
     const r = document.createRange();
     r.selectNodeContents(para);
@@ -225,6 +233,8 @@ export default function Reader({ bookId }) {
   const lastSavedParagraph = useRef(0);
   const lastSaveTime = useRef(0);
   const sampleTimerRef = useRef(null);
+  const readerContentRef = useRef(null);
+  const selectionUpdateTimerRef = useRef(null);
 
   // ── Load book ────────────────────────────────────────────
 
@@ -333,18 +343,59 @@ export default function Reader({ bookId }) {
     window.getSelection()?.removeAllRanges();
   }, []);
 
+  const updateSelectionInfo = useCallback(() => {
+    const info = computeSelectionInfo(readerContentRef.current);
+    setSelectionInfo(info);
+    if (info) setActivePanel(null);
+  }, []);
+
+  const scheduleSelectionUpdate = useCallback((delay = SELECTION_UPDATE_DELAY_MS) => {
+    clearTimeout(selectionUpdateTimerRef.current);
+    selectionUpdateTimerRef.current = setTimeout(() => {
+      updateSelectionInfo();
+    }, delay);
+  }, [updateSelectionInfo]);
+
   useEffect(() => {
     const onMouseUp = (e) => {
       if (e.button !== 0) return; // ignore right-click mouseup; contextmenu handles that
-      setTimeout(() => {
-        const info = computeSelectionInfo();
-        setSelectionInfo(info);
-        if (info) setActivePanel(null);
-      }, 10);
+      scheduleSelectionUpdate(10);
+    };
+    const onTouchEnd = () => scheduleSelectionUpdate();
+    const onSelectionChange = () => scheduleSelectionUpdate();
+    const onNativeSelection = (event) => {
+      const phase = event.detail?.phase;
+      if (phase === 'selectionDismissed') {
+        setSelectionInfo(null);
+        return;
+      }
+      scheduleSelectionUpdate();
     };
 
+    document.addEventListener('selectionchange', onSelectionChange);
     window.addEventListener('mouseup', onMouseUp);
-    return () => window.removeEventListener('mouseup', onMouseUp);
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
+    window.addEventListener('bibliophile-native-selection', onNativeSelection);
+
+    return () => {
+      clearTimeout(selectionUpdateTimerRef.current);
+      document.removeEventListener('selectionchange', onSelectionChange);
+      window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('bibliophile-native-selection', onNativeSelection);
+    };
+  }, [scheduleSelectionUpdate]);
+
+  useEffect(() => {
+    const bridge = window.BibliophileSelectionAndroid;
+    if (!Capacitor.isNativePlatform() || Capacitor.getPlatform() !== 'android' || !bridge?.setReaderSelectionOverrideEnabled) {
+      return undefined;
+    }
+
+    bridge.setReaderSelectionOverrideEnabled(true);
+    return () => {
+      bridge.setReaderSelectionOverrideEnabled(false);
+    };
   }, []);
 
   // Close annotation detail panel while scrolling so it doesn't float detached from text.
@@ -587,7 +638,7 @@ export default function Reader({ bookId }) {
       </header>
 
       <div className="reader-scroll-area">
-        <div className="reader-chapter-content">
+        <div className="reader-chapter-content" ref={readerContentRef}>
           {currentChapter?.title && (
             <h2 className="reader-chapter-title">{currentChapter.title}</h2>
           )}
